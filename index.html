@@ -158,7 +158,7 @@ header {
 
 /* ── SIDE PANEL — desktop ── */
 #panel {
-  width:288px; background:var(--surface);
+  width:300px; background:var(--surface);
   border-left:1px solid var(--border);
   display:flex; flex-direction:column;
   overflow:hidden; flex-shrink:0;
@@ -182,7 +182,7 @@ header {
 .score-ring-num { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:var(--fh); font-size:17px; font-weight:800; }
 .score-meta .label { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.1em; margin-bottom:2px; }
 .score-meta .desc { font-size:11.5px; color:var(--text-dim); line-height:1.4; }
-.score-meta .formula { font-family:var(--fm); font-size:10px; color:var(--text-muted); margin-top:4px; }
+.score-meta .formula { font-family:var(--fm); font-size:9.5px; color:var(--text-muted); line-height:1.5; margin-top:4px; }
 
 /* section titles */
 .section-title { font-size:9.5px; font-weight:600; text-transform:uppercase; letter-spacing:.13em; color:var(--text-muted); margin:12px 0 7px; padding-bottom:5px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:5px; }
@@ -190,18 +190,18 @@ header {
 /* metric rows */
 .metric-row { display:flex; align-items:center; justify-content:space-between; padding:5px 0; border-bottom:1px solid rgba(255,255,255,.035); }
 .metric-row:last-child { border-bottom:none; }
-.metric-label { font-size:11.5px; color:var(--text-dim); flex:1; }
-.metric-val { font-size:12px; font-weight:600; color:var(--text); text-align:right; font-family:var(--fm); }
+.metric-label { font-size:11px; color:var(--text-dim); flex:1; min-width:0; padding-right:8px; }
+.metric-val { font-size:11.5px; font-weight:600; color:var(--text); text-align:right; font-family:var(--fm); flex-shrink:0; }
 .metric-bar-wrap { width:44px; height:3px; background:rgba(255,255,255,.07); border-radius:2px; margin-left:7px; overflow:hidden; }
 .metric-bar { height:100%; border-radius:2px; background:var(--accent); transition:width .5s ease; }
 
 /* cmp bar */
-.cmp-bar { margin:4px 0 7px; }
+.cmp-bar { margin:4px 0 10px; }
 .cmp-track { position:relative; height:6px; background:var(--surface3); border-radius:3px; overflow:visible; }
 .cmp-fill { height:100%; border-radius:3px; transition:width .5s ease; }
 .cmp-avg-line { position:absolute; top:-3px; bottom:-3px; width:1.5px; background:#f59e0b; border-radius:1px; }
-.cmp-avg-label { position:absolute; top:-16px; font-size:9px; color:#f59e0b; white-space:nowrap; transform:translateX(-50%); font-family:var(--fm); }
-.cmp-labels { display:flex; justify-content:space-between; font-size:9px; color:var(--text-muted); margin-top:3px; }
+.cmp-avg-label { display:none; }
+.cmp-labels { position:relative; height:14px; font-size:9px; color:var(--text-muted); margin-top:3px; }
 
 /* 4G box */
 .fourag-box { display:flex; align-items:center; justify-content:space-between; background:var(--surface3); border-radius:8px; padding:8px 10px; border:1px solid var(--border); margin:8px 0; }
@@ -644,7 +644,7 @@ function buildCountyHTML(name, p){
   function cmpBar(value, natAvg, max, color){
     const pct = Math.min(100,(value/max)*100).toFixed(1);
     const avgPct = Math.min(100,(natAvg/max)*100).toFixed(1);
-    return `<div class="cmp-bar"><div class="cmp-track"><div class="cmp-fill" style="width:${pct}%;background:${color}"></div><div class="cmp-avg-line" style="left:${avgPct}%"><div class="cmp-avg-label">${natAvg}</div></div></div><div class="cmp-labels"><span>0</span><span style="color:#f59e0b;font-size:9px">▲ nat.avg</span><span>${max}</span></div></div>`;
+    return `<div class="cmp-bar"><div class="cmp-track"><div class="cmp-fill" style="width:${pct}%;background:${color}"></div><div class="cmp-avg-line" style="left:${avgPct}%"></div></div><div class="cmp-labels"><span style="position:absolute;left:0">0</span><span style="position:absolute;left:${avgPct}%;transform:translateX(-50%);color:#f59e0b">▲ ${natAvg}</span><span style="position:absolute;right:0">${max}</span></div></div>`;
   }
   function miniBar(v, max, color){ return `<div class="metric-bar-wrap"><div class="metric-bar" style="width:${Math.min(100,(v/max)*100)}%;background:${color}"></div></div>`; }
 
