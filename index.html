@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Kenya Connectivity Map · DateFix KE</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23080d18'/%3E%3Ctext x='16' y='22' font-family='Arial Black,Arial' font-weight='900' font-size='13' fill='%2300c8f0' text-anchor='middle'%3EKE%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -40,6 +41,7 @@
 ══════════════════════════════════════════════════ */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 html, body { height:100%; overflow:hidden; }
+@supports (height: 100dvh) { html, body { height:100dvh; } }
 body {
   font-family: var(--fb);
   background: var(--bg);
@@ -307,42 +309,46 @@ header {
 ══════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* Header: logo + search only, no layer tabs or rank buttons */
+  /* Header */
   header { padding:0 12px; gap:10px; }
   .layer-tabs { display:none; }
   .ranking-toggle { display:none; }
   .logo h1 { font-size:13px; }
   .search-wrap { max-width:none; flex:1; }
 
-  /* Show mobile tabs row below header */
+  /* Mobile tabs row */
   .mobile-tabs-row { display:flex; }
 
-  /* Map takes full width, no side panel */
+  /* Map: full width, no side panel */
   #panel { display:none; }
   #map { width:100%; }
 
-  /* Rankings drawer: full-width centered */
+  /* Hide stats bar — reclaim vertical space for the map */
+  .stats-bar { display:none; }
+
+  /* Bottom sheet: visible, iOS safe area at bottom */
+  #bottom-sheet {
+    display:flex;
+    max-height:80vh;
+    padding-bottom:env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Rankings drawer */
   #rankings-drawer { left:12px; right:12px; width:auto; top:auto; bottom:calc(var(--sheet-peek) + 60px); }
 
-  /* Show bottom sheet */
-  #bottom-sheet { display:flex; }
-
-  /* Show tap hint */
+  /* Tap hint */
   .map-tap-hint { display:block; }
 
-  /* Stats bar: show only 3 key stats */
-  .stats-bar { height:auto; }
-  .stat-item.hide-mobile { display:none; }
-  .stat-item { padding:5px 8px; }
-  .stat-label { font-size:8px; }
-  .stat-value { font-size:11px; }
-
-  /* Zoom control position — avoid overlap with bottom sheet */
+  /* Zoom control: clear the bottom sheet */
   .leaflet-control-zoom { margin-bottom:calc(var(--sheet-peek) + 56px) !important; }
   .leaflet-bottom.leaflet-right { margin-bottom:calc(var(--sheet-peek) + 8px); }
 
-  /* Search results: full width */
+  /* Search results */
   .search-results { position:fixed; left:12px; right:12px; top:auto; }
+
+  /* Score ring responsive */
+  .score-ring-wrap { flex-direction:column; align-items:center; text-align:center; }
+  .score-ring svg { width:52px; height:52px; }
 }
 
 @media (max-width: 480px) {
@@ -460,7 +466,7 @@ header {
     <div class="sheet-handle"></div>
   </div>
   <div class="sheet-header">
-    <div class="sheet-county-name" id="sheet-name">Tap a county</div>
+    <div class="sheet-county-name" id="sheet-name"></div>
     <div class="sheet-rank-line" id="sheet-rank-line"></div>
   </div>
   <div class="sheet-body" id="sheet-body">
@@ -544,7 +550,25 @@ const allCounties = Object.entries(countyLookup)
 // ── Map ────────────────────────────────────────────────────────────────────
 const map = L.map('map', {zoomControl:true, attributionControl:false, minZoom:5, maxZoom:9});
 map.zoomControl.setPosition('bottomright');
-map.fitBounds([[-4.72,33.91],[4.62,41.91]], {padding:[20,20]});
+
+// Invalidate map size on resize/orientation change
+function onResize(){
+  map.invalidateSize({animate:false});
+  const isMob = window.innerWidth <= 768;
+  map.fitBounds([[-4.72,33.91],[4.62,41.91]], {
+    paddingTopLeft:    [isMob ? 10 : 20, isMob ? 10 : 20],
+    paddingBottomRight:[isMob ? 10 : 20, isMob ? 100 : 20]
+  });
+}
+window.addEventListener('resize', onResize);
+window.addEventListener('orientationchange', () => setTimeout(onResize, 300));
+(function(){
+  const isMob = window.innerWidth <= 768;
+  map.fitBounds([[-4.72,33.91],[4.62,41.91]], {
+    paddingTopLeft:    [isMob ? 10 : 20, isMob ? 10 : 20],
+    paddingBottomRight:[isMob ? 10 : 20, isMob ? 100 : 20]
+  });
+})();
 
 function getStyle(feature, highlight=false){
   const p = feature.properties;
@@ -610,11 +634,11 @@ function buildCountyHTML(name, p){
   const filled = (composite/100)*dash;
 
   const speedVal = p.speed_flag
-    ? `<span style="color:#ef4444">${p.speed_dl.toFixed(1)} Mbps</span>`
+    ? `<span style="color:var(--text-muted);font-style:italic">Unreliable data</span>`
     : `${p.speed_dl.toFixed(1)} Mbps`;
 
   const speedScoreHtml = p.speed_flag
-    ? `<div class="flag-badge">⚠ Starlink bias</div><div class="starlink-note">Speed data likely reflects Starlink users — excluded from composite score.</div>`
+    ? `<div class="flag-badge">⚠ Speed data excluded</div><div class="starlink-note">Only a small number of speed tests exist for this county, likely from satellite users. This doesn't reflect the typical resident's experience, so speed is excluded from the composite score.</div>`
     : `<div class="metric-row"><span class="metric-label">Speed Score</span><span class="metric-val">${(p.speed_score||0).toFixed(1)} / 100</span><div class="metric-bar-wrap"><div class="metric-bar" style="width:${p.speed_score||0}%;background:#6ee7b7"></div></div></div>`;
 
   function cmpBar(value, natAvg, max, color){
