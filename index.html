@@ -656,8 +656,8 @@ function buildCountyHTML(name, p){
     <div class="metric-row"><span class="metric-label">Tower Score</span><span class="metric-val">${(p.tower_score||0).toFixed(1)} / 100</span>${miniBar(p.tower_score||0,100,'#6ee7b7')}</div>
     <div class="section-title">⚡ Speed (Ookla Q4 2024)</div>
     <div class="metric-row"><span class="metric-label">Download</span><span class="metric-val">${speedVal}</span></div>
-    <div class="metric-row"><span class="metric-label">Upload</span><span class="metric-val">${p.speed_ul.toFixed(1)} Mbps</span></div>
-    <div class="metric-row"><span class="metric-label">Latency</span><span class="metric-val">${p.speed_lat.toFixed(0)} ms</span></div>
+    ${p.speed_ul != null ? `<div class="metric-row"><span class="metric-label">Upload</span><span class="metric-val">${p.speed_ul.toFixed(1)} Mbps</span></div>` : ''}
+    ${p.speed_lat != null ? `<div class="metric-row"><span class="metric-label">Latency</span><span class="metric-val">${p.speed_lat.toFixed(0)} ms</span></div>` : ''}
     ${speedScoreHtml}
     <div class="section-title">💡 Electricity Access (2019 Census)</div>
     <div class="metric-row"><span class="metric-label">Household access</span><span class="metric-val">${p.elec_pct !== undefined ? p.elec_pct.toFixed(1)+'%' : 'N/A'}</span></div>
