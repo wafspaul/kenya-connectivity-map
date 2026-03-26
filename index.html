@@ -426,10 +426,13 @@ header {
 
     <!-- Mobile electricity overlay controls (floating on map, hidden on desktop) -->
     <div id="mobile-elec-ctrl" style="display:none;position:absolute;bottom:14px;left:12px;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;z-index:800;box-shadow:0 4px 16px rgba(0,0,0,.4);">
-      <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);margin-bottom:7px">⚡ Map Overlays</div>
-      <label style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-dim);margin-bottom:5px;cursor:pointer"><input type="checkbox" id="mob-tog-grid" style="accent-color:var(--accent)"> Grid Network (66–220 kV)</label>
-      <label style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-dim);margin-bottom:5px;cursor:pointer"><input type="checkbox" id="mob-tog-mg-existing" checked style="accent-color:#10b981"> Existing Mini-grids (22)</label>
-      <label style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-dim);margin-bottom:5px;cursor:pointer"><input type="checkbox" id="mob-tog-mg-dev" style="accent-color:#f59e0b"> Under Development (26)</label>
+      <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);margin-bottom:5px">⚡ Map Overlays</div>
+      <div style="font-size:9px;color:var(--text-dim);font-weight:600;margin-bottom:3px;opacity:.7">⊞ Grid Transmission Lines</div>
+      <label style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-dim);margin-bottom:3px;cursor:pointer;padding-left:8px"><input type="checkbox" id="mob-tog-grid-220" checked style="accent-color:#f97316"> 220 kV backbone</label>
+      <label style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-dim);margin-bottom:3px;cursor:pointer;padding-left:8px"><input type="checkbox" id="mob-tog-grid-132" checked style="accent-color:#f59e0b"> 132 kV regional</label>
+      <label style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-dim);margin-bottom:5px;cursor:pointer;padding-left:8px"><input type="checkbox" id="mob-tog-grid-66" checked style="accent-color:#facc15"> 66 kV distribution</label>
+      <label style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-dim);margin-bottom:4px;cursor:pointer"><input type="checkbox" id="mob-tog-mg-existing" checked style="accent-color:#10b981"> Existing Mini-grids (22)</label>
+      <label style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-dim);margin-bottom:4px;cursor:pointer"><input type="checkbox" id="mob-tog-mg-dev" style="accent-color:#f59e0b"> Under Development (26)</label>
       <label style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-dim);cursor:pointer"><input type="checkbox" id="mob-tog-mg-kosap" style="accent-color:#a78bfa"> KOSAP Proposed (121)</label>
     </div>
   </div>
@@ -451,11 +454,14 @@ header {
       <div class="legend-title" id="legend-title">Connectivity Tier</div>
       <div class="legend-grid" id="legend-grid"></div>
       <div id="elec-overlay-ctrl" style="display:none;margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.07)">
-        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);margin-bottom:6px">Map Overlays</div>
-        <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-dim);margin-bottom:3px;cursor:pointer"><input type="checkbox" id="tog-grid" style="accent-color:var(--accent)"> Grid Network (66–220 kV)</label>
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);margin-bottom:5px">Map Overlays</div>
+        <div style="font-size:9px;color:var(--text-dim);font-weight:600;margin-bottom:3px;opacity:.7">⊞ Grid Transmission Lines</div>
+        <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-dim);margin-bottom:2px;cursor:pointer;padding-left:8px"><input type="checkbox" id="tog-grid-220" checked style="accent-color:#f97316"> 220 kV backbone</label>
+        <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-dim);margin-bottom:2px;cursor:pointer;padding-left:8px"><input type="checkbox" id="tog-grid-132" checked style="accent-color:#f59e0b"> 132 kV regional</label>
+        <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-dim);margin-bottom:5px;cursor:pointer;padding-left:8px"><input type="checkbox" id="tog-grid-66" checked style="accent-color:#facc15"> 66 kV distribution</label>
         <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-dim);margin-bottom:3px;cursor:pointer"><input type="checkbox" id="tog-mg-existing" checked style="accent-color:#10b981"> Existing Mini-grids (22)</label>
         <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-dim);margin-bottom:3px;cursor:pointer"><input type="checkbox" id="tog-mg-dev" style="accent-color:#f59e0b"> Under Development (26)</label>
-        <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-dim);;cursor:pointer"><input type="checkbox" id="tog-mg-kosap" style="accent-color:#a78bfa"> KOSAP Proposed Sites (121)</label>
+        <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-dim);cursor:pointer"><input type="checkbox" id="tog-mg-kosap" style="accent-color:#a78bfa"> KOSAP Proposed Sites (121)</label>
       </div>
     </div>
   </div>
@@ -675,6 +681,14 @@ function buildCountyHTML(name, p){
     ? `<div class="flag-badge">⚠ Speed data excluded</div><div class="starlink-note">Only a small number of speed tests exist for this county, likely from satellite users. This doesn't reflect the typical resident's experience, so speed is excluded from the composite score.</div>`
     : `<div class="metric-row"><span class="metric-label">Speed Score</span><span class="metric-val">${(p.speed_score||0).toFixed(1)} / 100</span><div class="metric-bar-wrap"><div class="metric-bar" style="width:${p.speed_score||0}%;background:#6ee7b7"></div></div></div>`;
 
+  // Mini-grid counts for this county (used in electricity panel section)
+  const _mgExist = MG_EXISTING.filter(s => s.county === name);
+  const _mgDev   = MG_UNDER_DEV.filter(s => s.county === name);
+  const _mgKosap = MG_KOSAP.filter(s => s.county === name);
+  const _mgExistCustomers = _mgExist.reduce((a,s) => a + (s.customers||0), 0);
+  const _mgDevCustomers   = _mgDev.reduce((a,s) => a + (s.customers||0), 0);
+  const _mgKosapCustomers = _mgKosap.reduce((a,s) => a + (s.customers||0), 0);
+
   function cmpBar(value, natAvg, max, color){
     const pct = Math.min(100,(value/max)*100).toFixed(1);
     const avgPct = Math.min(100,(natAvg/max)*100).toFixed(1);
@@ -728,6 +742,13 @@ function buildCountyHTML(name, p){
       <div class="metric-row"><span class="metric-label">Household access</span><span class="metric-val">${p.elec_pct !== undefined ? p.elec_pct.toFixed(1)+'%' : 'N/A'}</span></div>
       ${p.elec_pct !== undefined ? cmpBar(p.elec_pct, 38.7, 100, '#facc15') : ''}
       <div style="font-size:9.5px;color:var(--text-muted);margin-top:3px;opacity:.8">KNBS 2019 Census · Nat avg: 38.7%</div>
+      <div style="margin-top:9px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.07)">
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin-bottom:5px">Mini-Grid Coverage</div>
+        ${_mgExist.length ? `<div style="font-size:10.5px;color:var(--text-dim);margin-bottom:3px"><span style="color:#10b981;font-size:11px">●</span> <strong style="color:var(--text)">${_mgExist.length}</strong> operational site${_mgExist.length>1?'s':''} · ${_mgExistCustomers.toLocaleString()} customers</div>` : ''}
+        ${_mgDev.length ? `<div style="font-size:10.5px;color:var(--text-dim);margin-bottom:3px"><span style="color:#f59e0b;font-size:11px">●</span> <strong style="color:var(--text)">${_mgDev.length}</strong> under development · ~${_mgDevCustomers.toLocaleString()} projected</div>` : ''}
+        ${_mgKosap.length ? `<div style="font-size:10.5px;color:var(--text-dim);margin-bottom:3px"><span style="color:#a78bfa;font-size:11px">●</span> <strong style="color:var(--text)">${_mgKosap.length}</strong> KOSAP proposed · ~${_mgKosapCustomers.toLocaleString()} projected</div>` : ''}
+        ${(!_mgExist.length && !_mgDev.length && !_mgKosap.length) ? `<div style="font-size:10px;color:var(--text-muted);font-style:italic">No mini-grid coverage identified in this county</div>` : ''}
+      </div>
     </div>
     <div class="panel-section panel-section--all" data-section="all">
       <button class="profile-toggle-btn" id="profile-toggle" onclick="toggleFullProfile(this)">▼ View full county profile</button>
@@ -813,11 +834,19 @@ sheetDrag.addEventListener('click', () => {
 
 // ── Legend ─────────────────────────────────────────────────────────────────
 function updateLegend(){
-  const items = LAYERS[activeLayer].legendItems;
-  document.getElementById('legend-title').textContent = LAYERS[activeLayer].label;
-  document.getElementById('legend-grid').innerHTML = items.map(i =>
+  const lyr = LAYERS[activeLayer];
+  document.getElementById('legend-title').textContent = lyr.label;
+  let legendHtml = lyr.legendItems.map(i =>
     `<div class="legend-item"><div class="legend-dot" style="background:${i.color}"></div>${i.label}</div>`
   ).join('');
+  // Electricity tab: append mini-grid colour key
+  if(activeLayer === 'electricity'){
+    legendHtml += `<div style="margin:5px 0 3px;border-top:1px solid var(--border);padding-top:4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted)">Mini-grid sites</div>`;
+    legendHtml += `<div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>Operational (22)</div>`;
+    legendHtml += `<div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Under dev. (26)</div>`;
+    legendHtml += `<div class="legend-item"><div class="legend-dot" style="background:#a78bfa"></div>KOSAP proposed (121)</div>`;
+  }
+  document.getElementById('legend-grid').innerHTML = legendHtml;
 }
 updateLegend();
 
@@ -974,18 +1003,19 @@ function toggleFullProfile(btn){
 
 // ── Electricity overlay layers ─────────────────────────────────────────────
 
-// Grid network layer
-const gridLayer = L.geoJSON(ELEC_GRID, {
-  style: f => {
-    const v = f.properties.voltage;
-    const colors = {'220kV':'#f97316','132kV':'#f59e0b','66kV':'#facc15'};
-    const weights = {'220kV':2.5,'132kV':1.8,'66kV':1.2};
-    return { color: colors[v]||'#facc15', weight: weights[v]||1, opacity:0.7, fill:false };
-  },
-  onEachFeature:(f,l) => {
-    l.bindTooltip(`${f.properties.voltage} Transmission Line`, {sticky:true});
-  }
-});
+// Grid network — split into 3 voltage layers for independent filtering
+const _gridColors  = {'220kV':'#f97316','132kV':'#f59e0b','66kV':'#facc15'};
+const _gridWeights = {'220kV':2.5,'132kV':1.8,'66kV':1.2};
+const _gridStyle   = f => ({ color:_gridColors[f.properties.voltage]||'#facc15', weight:_gridWeights[f.properties.voltage]||1, opacity:0.75, fill:false });
+function _mkGrid(voltage){
+  return L.geoJSON(
+    {type:'FeatureCollection', features: ELEC_GRID.features.filter(f => f.properties.voltage===voltage)},
+    { style:_gridStyle, onEachFeature:(f,l) => l.bindTooltip(`${voltage} Transmission Line`,{sticky:true}) }
+  );
+}
+const gridLayer220 = _mkGrid('220kV');
+const gridLayer132 = _mkGrid('132kV');
+const gridLayer66  = _mkGrid('66kV');
 
 // Mini-grid markers — auto-converts Web Mercator coords to WGS84 if needed
 function mgMarker(site, color, radius){
@@ -1020,33 +1050,41 @@ function syncOverlays(){
   const mobileElecCtrl = document.getElementById('mobile-elec-ctrl');
   if(mobileElecCtrl) mobileElecCtrl.style.display = isElec && mob ? 'block' : 'none';
 
-  // Read from whichever checkbox set is active
+  // Read from whichever checkbox set is active (desktop vs mobile)
   const p = mob ? 'mob-' : '';
-  const togGrid     = document.getElementById(p + 'tog-grid');
+  const togG220     = document.getElementById(p + 'tog-grid-220');
+  const togG132     = document.getElementById(p + 'tog-grid-132');
+  const togG66      = document.getElementById(p + 'tog-grid-66');
   const togExisting = document.getElementById(p + 'tog-mg-existing');
   const togDev      = document.getElementById(p + 'tog-mg-dev');
   const togKosap    = document.getElementById(p + 'tog-mg-kosap');
 
+  function toggleLayer(tog, lyr){
+    if(!tog) return;
+    tog.checked ? lyr.addTo(map) : (map.hasLayer(lyr) && map.removeLayer(lyr));
+  }
+
   if(!isElec){
-    if(map.hasLayer(gridLayer))      map.removeLayer(gridLayer);
-    if(map.hasLayer(mgExistingLayer))map.removeLayer(mgExistingLayer);
-    if(map.hasLayer(mgDevLayer))     map.removeLayer(mgDevLayer);
-    if(map.hasLayer(mgKosapLayer))   map.removeLayer(mgKosapLayer);
+    [gridLayer220,gridLayer132,gridLayer66,mgExistingLayer,mgDevLayer,mgKosapLayer].forEach(l => {
+      if(map.hasLayer(l)) map.removeLayer(l);
+    });
     return;
   }
-  if(togGrid)     togGrid.checked     ? gridLayer.addTo(map)      : map.hasLayer(gridLayer)&&map.removeLayer(gridLayer);
-  if(togExisting) togExisting.checked ? mgExistingLayer.addTo(map): map.hasLayer(mgExistingLayer)&&map.removeLayer(mgExistingLayer);
-  if(togDev)      togDev.checked      ? mgDevLayer.addTo(map)     : map.hasLayer(mgDevLayer)&&map.removeLayer(mgDevLayer);
-  if(togKosap)    togKosap.checked    ? mgKosapLayer.addTo(map)   : map.hasLayer(mgKosapLayer)&&map.removeLayer(mgKosapLayer);
+  toggleLayer(togG220,     gridLayer220);
+  toggleLayer(togG132,     gridLayer132);
+  toggleLayer(togG66,      gridLayer66);
+  toggleLayer(togExisting, mgExistingLayer);
+  toggleLayer(togDev,      mgDevLayer);
+  toggleLayer(togKosap,    mgKosapLayer);
 }
 
 // Desktop overlay checkbox listeners
-['tog-grid','tog-mg-existing','tog-mg-dev','tog-mg-kosap'].forEach(id => {
+['tog-grid-220','tog-grid-132','tog-grid-66','tog-mg-existing','tog-mg-dev','tog-mg-kosap'].forEach(id => {
   const el = document.getElementById(id);
   if(el) el.addEventListener('change', syncOverlays);
 });
 // Mobile overlay checkbox listeners
-['mob-tog-grid','mob-tog-mg-existing','mob-tog-mg-dev','mob-tog-mg-kosap'].forEach(id => {
+['mob-tog-grid-220','mob-tog-grid-132','mob-tog-grid-66','mob-tog-mg-existing','mob-tog-mg-dev','mob-tog-mg-kosap'].forEach(id => {
   const el = document.getElementById(id);
   if(el) el.addEventListener('change', syncOverlays);
 });
