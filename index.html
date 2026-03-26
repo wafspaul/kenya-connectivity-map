@@ -963,16 +963,9 @@ function syncOverlays(){
   if(el) el.addEventListener('change', syncOverlays);
 });
 
-// Patch setLayer to sync overlays on every tab switch
-const _origSetLayer = setLayer;
-function setLayer(layer){
-  _origSetLayer(layer);
-  syncOverlays();
-}
+// Sync overlays on every tab switch — listen alongside the original setLayer listener
 document.querySelectorAll('.layer-tab').forEach(btn => {
-  btn.removeEventListener('click', btn._layerHandler);
-  btn._layerHandler = () => setLayer(btn.dataset.layer);
-  btn.addEventListener('click', btn._layerHandler);
+  btn.addEventListener('click', syncOverlays);
 });
 
 syncOverlays();
