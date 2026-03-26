@@ -158,7 +158,7 @@ header {
 
 /* ── SIDE PANEL — desktop ── */
 #panel {
-  width:300px; background:var(--surface);
+  width:318px; background:var(--surface);
   border-left:1px solid var(--border);
   display:flex; flex-direction:column;
   overflow:hidden; flex-shrink:0;
@@ -185,7 +185,7 @@ header {
 .score-meta .formula { font-family:var(--fm); font-size:9.5px; color:var(--text-muted); line-height:1.5; margin-top:4px; }
 
 /* section titles */
-.section-title { font-size:9.5px; font-weight:600; text-transform:uppercase; letter-spacing:.13em; color:var(--text-muted); margin:12px 0 7px; padding-bottom:5px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:5px; }
+.section-title { font-size:9.5px; font-weight:600; text-transform:uppercase; letter-spacing:.13em; color:var(--text-muted); margin:14px 0 6px; padding-bottom:4px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:5px; }
 
 /* metric rows */
 .metric-row { display:flex; align-items:center; justify-content:space-between; padding:5px 0; border-bottom:1px solid rgba(255,255,255,.035); }
@@ -196,12 +196,12 @@ header {
 .metric-bar { height:100%; border-radius:2px; background:var(--accent); transition:width .5s ease; }
 
 /* cmp bar */
-.cmp-bar { margin:4px 0 8px; }
+.cmp-bar { margin:6px 0 12px; }
 .cmp-track { position:relative; height:6px; background:var(--surface3); border-radius:3px; overflow:visible; }
 .cmp-fill { height:100%; border-radius:3px; transition:width .5s ease; }
 .cmp-avg-line { position:absolute; top:-3px; bottom:-3px; width:1.5px; background:#f59e0b; border-radius:1px; }
-.cmp-avg-label { position:absolute; top:-18px; font-size:8.5px; color:#f59e0b; white-space:nowrap; transform:translateX(-50%); font-family:var(--fm); pointer-events:none; }
-.cmp-labels { display:flex; justify-content:space-between; font-size:9px; color:var(--text-muted); margin-top:14px; }
+.cmp-avg-label { position:absolute; bottom:-15px; font-size:8px; color:#f59e0b; white-space:nowrap; transform:translateX(-50%); font-family:var(--fm); pointer-events:none; }
+.cmp-labels { display:flex; justify-content:space-between; font-size:9px; color:var(--text-muted); margin-top:17px; }
 
 /* 4G box */
 .fourag-box { display:flex; align-items:center; justify-content:space-between; background:var(--surface3); border-radius:8px; padding:8px 10px; border:1px solid var(--border); margin:8px 0; }
@@ -239,7 +239,7 @@ header {
 .rank-score { font-family:var(--fm); font-size:11px; font-weight:600; }
 
 /* ── LEGEND ── */
-.legend-panel { padding:10px 16px; border-top:1px solid var(--border); flex-shrink:0; }
+.legend-panel { padding:10px 16px; border-top:1px solid var(--border); flex-shrink:0; max-height:220px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--border2) transparent; }
 .legend-title { font-size:9.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--text-muted); margin-bottom:7px; font-weight:600; }
 .legend-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px 10px; }
 .legend-item { display:flex; align-items:center; gap:6px; font-size:10.5px; color:var(--text-dim); }
@@ -429,19 +429,11 @@ header {
       <div class="legend-title" id="legend-title">Connectivity Tier</div>
       <div class="legend-grid" id="legend-grid"></div>
       <div id="elec-overlay-ctrl" style="display:none;margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.07)">
-        <div style="font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin-bottom:7px">Map Overlays</div>
-        <label style="display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--text-dim);margin-bottom:4px;cursor:pointer">
-          <input type="checkbox" id="tog-grid" style="accent-color:var(--accent)"> Grid Network (66–220 kV)
-        </label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--text-dim);margin-bottom:4px;cursor:pointer">
-          <input type="checkbox" id="tog-mg-existing" checked style="accent-color:#10b981"> Existing Mini-grids (22)
-        </label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--text-dim);margin-bottom:4px;cursor:pointer">
-          <input type="checkbox" id="tog-mg-dev" style="accent-color:#f59e0b"> Under Development (26)
-        </label>
-        <label style="display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--text-dim);cursor:pointer">
-          <input type="checkbox" id="tog-mg-kosap" style="accent-color:#a78bfa"> Proposed KOSAP Sites (121)
-        </label>
+        <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);margin-bottom:6px">Map Overlays</div>
+        <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-dim);margin-bottom:3px;cursor:pointer"><input type="checkbox" id="tog-grid" style="accent-color:var(--accent)"> Grid Network (66–220 kV)</label>
+        <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-dim);margin-bottom:3px;cursor:pointer"><input type="checkbox" id="tog-mg-existing" checked style="accent-color:#10b981"> Existing Mini-grids (22)</label>
+        <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-dim);margin-bottom:3px;cursor:pointer"><input type="checkbox" id="tog-mg-dev" style="accent-color:#f59e0b"> Under Development (26)</label>
+        <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-dim);;cursor:pointer"><input type="checkbox" id="tog-mg-kosap" style="accent-color:#a78bfa"> KOSAP Proposed Sites (121)</label>
       </div>
     </div>
   </div>
@@ -664,7 +656,7 @@ function buildCountyHTML(name, p){
   function cmpBar(value, natAvg, max, color){
     const pct = Math.min(100,(value/max)*100).toFixed(1);
     const avgPct = Math.min(100,(natAvg/max)*100).toFixed(1);
-    return `<div class="cmp-bar"><div class="cmp-track"><div class="cmp-fill" style="width:${pct}%;background:${color}"></div><div class="cmp-avg-line" style="left:${avgPct}%"><div class="cmp-avg-label">▲ ${natAvg}</div></div></div><div class="cmp-labels"><span>0</span><span>${max}</span></div></div>`;
+    return `<div class="cmp-bar"><div class="cmp-track"><div class="cmp-fill" style="width:${pct}%;background:${color}"></div><div class="cmp-avg-line" style="left:${avgPct}%"><div class="cmp-avg-label">avg ${natAvg}</div></div></div><div class="cmp-labels"><span>0</span><span>${max}</span></div></div>`;
   }
   function miniBar(v, max, color){ return `<div class="metric-bar-wrap"><div class="metric-bar" style="width:${Math.min(100,(v/max)*100)}%;background:${color}"></div></div>`; }
 
@@ -685,7 +677,7 @@ function buildCountyHTML(name, p){
       </div>
     </div>
     <div class="section-title">🌐 Internet Usage</div>
-    <div class="metric-row"><span class="metric-label">Individual (KHS 2023-24)</span><span class="metric-val">${p.internet_ind.toFixed(1)}%</span></div>
+    <div class="metric-row"><span class="metric-label">Individual usage (2023–24)</span><span class="metric-val">${p.internet_ind.toFixed(1)}%</span></div>
     ${cmpBar(p.internet_ind, 35, 70, '#00c8f0')}
     <div class="metric-row"><span class="metric-label">Household (KDHS 2022)</span><span class="metric-val">${p.internet_hh.toFixed(1)}%</span></div>
     <div class="metric-row"><span class="metric-label">Usage Score</span><span class="metric-val">${(p.usage_score||0).toFixed(1)} / 100</span>${miniBar(p.usage_score||0,100,'#00c8f0')}</div>
@@ -706,7 +698,7 @@ function buildCountyHTML(name, p){
     <div class="section-title">💡 Electricity Access (2019 Census)</div>
     <div class="metric-row"><span class="metric-label">Household access</span><span class="metric-val">${p.elec_pct !== undefined ? p.elec_pct.toFixed(1)+'%' : 'N/A'}</span></div>
     ${p.elec_pct !== undefined ? cmpBar(p.elec_pct, 38.7, 100, '#facc15') : ''}
-    <div style="font-size:10px;color:var(--text-muted);margin-top:4px">Source: KNBS 2019 Census · National avg: 38.7%</div>
+    <div style="font-size:9.5px;color:var(--text-muted);margin-top:3px;opacity:.8">KNBS 2019 Census · Nat avg: 38.7%</div>
   `};
 }
 
