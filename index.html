@@ -240,6 +240,15 @@ header {
 
 /* ── LEGEND ── */
 .legend-panel { padding:10px 16px; border-top:1px solid var(--border); flex-shrink:0; max-height:220px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--border2) transparent; }
+.panel-section { }
+.profile-toggle-btn {
+  width:100%; margin-top:8px; padding:7px 0;
+  background:transparent; border:1px solid var(--border2);
+  border-radius:8px; color:var(--text-muted); font-size:11px;
+  font-family:var(--fb); cursor:pointer; letter-spacing:.03em;
+  transition:all .18s;
+}
+.profile-toggle-btn:hover { border-color:var(--accent); color:var(--accent); }
 .legend-title { font-size:9.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--text-muted); margin-bottom:7px; font-weight:600; }
 .legend-grid { display:grid; grid-template-columns:1fr 1fr; gap:4px 10px; }
 .legend-item { display:flex; align-items:center; gap:6px; font-size:10.5px; color:var(--text-dim); }
@@ -676,29 +685,40 @@ function buildCountyHTML(name, p){
         <div class="formula">40% usage · 30% towers · 30% speed</div>
       </div>
     </div>
-    <div class="section-title">🌐 Internet Usage</div>
-    <div class="metric-row"><span class="metric-label">Individual usage (2023–24)</span><span class="metric-val">${p.internet_ind.toFixed(1)}%</span></div>
-    ${cmpBar(p.internet_ind, 35, 70, '#00c8f0')}
-    <div class="metric-row"><span class="metric-label">Household (KDHS 2022)</span><span class="metric-val">${p.internet_hh.toFixed(1)}%</span></div>
-    <div class="metric-row"><span class="metric-label">Usage Score</span><span class="metric-val">${(p.usage_score||0).toFixed(1)} / 100</span>${miniBar(p.usage_score||0,100,'#00c8f0')}</div>
-    <div class="section-title">📡 Tower Infrastructure</div>
-    <div class="metric-row"><span class="metric-label">Density / 100 km²</span><span class="metric-val">${p.towers_density.toFixed(1)}</span></div>
-    ${cmpBar(Math.min(p.towers_density,300), 30, 300, '#6ee7b7')}
-    <div class="fourag-box">
-      <div><div class="fourag-label">4G coverage</div><div class="fourag-val" style="color:#10b981">${p.towers_4g.toFixed(1)}%</div></div>
-      <div class="fourag-bar-wrap"><div class="fourag-bar" style="width:${Math.min(p.towers_4g*6,100)}%"></div></div>
-      <div style="font-size:10px;color:var(--text-muted);text-align:right"><div>nat avg</div><div style="font-family:var(--fm);font-weight:600">4.3%</div></div>
+    <div class="panel-section" data-section="internet">
+      <div class="section-title">🌐 Internet Usage</div>
+      <div class="metric-row"><span class="metric-label">Individual usage (2023–24)</span><span class="metric-val">${p.internet_ind.toFixed(1)}%</span></div>
+      ${cmpBar(p.internet_ind, 35, 70, '#00c8f0')}
+      <div class="metric-row"><span class="metric-label">Household (KDHS 2022)</span><span class="metric-val">${p.internet_hh.toFixed(1)}%</span></div>
+      <div class="metric-row"><span class="metric-label">Usage Score</span><span class="metric-val">${(p.usage_score||0).toFixed(1)} / 100</span>${miniBar(p.usage_score||0,100,'#00c8f0')}</div>
     </div>
-    <div class="metric-row"><span class="metric-label">Tower Score</span><span class="metric-val">${(p.tower_score||0).toFixed(1)} / 100</span>${miniBar(p.tower_score||0,100,'#6ee7b7')}</div>
-    <div class="section-title">⚡ Speed (Ookla Q4 2024)</div>
-    <div class="metric-row"><span class="metric-label">Download</span><span class="metric-val">${speedVal}</span></div>
-    ${p.speed_ul != null ? `<div class="metric-row"><span class="metric-label">Upload</span><span class="metric-val">${p.speed_ul.toFixed(1)} Mbps</span></div>` : ''}
-    ${p.speed_lat != null ? `<div class="metric-row"><span class="metric-label">Latency</span><span class="metric-val">${p.speed_lat.toFixed(0)} ms</span></div>` : ''}
-    ${speedScoreHtml}
-    <div class="section-title">💡 Electricity Access (2019 Census)</div>
-    <div class="metric-row"><span class="metric-label">Household access</span><span class="metric-val">${p.elec_pct !== undefined ? p.elec_pct.toFixed(1)+'%' : 'N/A'}</span></div>
-    ${p.elec_pct !== undefined ? cmpBar(p.elec_pct, 38.7, 100, '#facc15') : ''}
-    <div style="font-size:9.5px;color:var(--text-muted);margin-top:3px;opacity:.8">KNBS 2019 Census · Nat avg: 38.7%</div>
+    <div class="panel-section" data-section="towers">
+      <div class="section-title">📡 Tower Infrastructure</div>
+      <div class="metric-row"><span class="metric-label">Density / 100 km²</span><span class="metric-val">${p.towers_density.toFixed(1)}</span></div>
+      ${cmpBar(Math.min(p.towers_density,300), 30, 300, '#6ee7b7')}
+      <div class="fourag-box">
+        <div><div class="fourag-label">4G coverage</div><div class="fourag-val" style="color:#10b981">${p.towers_4g.toFixed(1)}%</div></div>
+        <div class="fourag-bar-wrap"><div class="fourag-bar" style="width:${Math.min(p.towers_4g*6,100)}%"></div></div>
+        <div style="font-size:10px;color:var(--text-muted);text-align:right"><div>nat avg</div><div style="font-family:var(--fm);font-weight:600">4.3%</div></div>
+      </div>
+      <div class="metric-row"><span class="metric-label">Tower Score</span><span class="metric-val">${(p.tower_score||0).toFixed(1)} / 100</span>${miniBar(p.tower_score||0,100,'#6ee7b7')}</div>
+    </div>
+    <div class="panel-section" data-section="speed">
+      <div class="section-title">⚡ Speed (Ookla Q4 2024)</div>
+      <div class="metric-row"><span class="metric-label">Download</span><span class="metric-val">${speedVal}</span></div>
+      ${p.speed_ul != null ? `<div class="metric-row"><span class="metric-label">Upload</span><span class="metric-val">${p.speed_ul.toFixed(1)} Mbps</span></div>` : ''}
+      ${p.speed_lat != null ? `<div class="metric-row"><span class="metric-label">Latency</span><span class="metric-val">${p.speed_lat.toFixed(0)} ms</span></div>` : ''}
+      ${speedScoreHtml}
+    </div>
+    <div class="panel-section" data-section="electricity">
+      <div class="section-title">💡 Electricity Access (2019 Census)</div>
+      <div class="metric-row"><span class="metric-label">Household access</span><span class="metric-val">${p.elec_pct !== undefined ? p.elec_pct.toFixed(1)+'%' : 'N/A'}</span></div>
+      ${p.elec_pct !== undefined ? cmpBar(p.elec_pct, 38.7, 100, '#facc15') : ''}
+      <div style="font-size:9.5px;color:var(--text-muted);margin-top:3px;opacity:.8">KNBS 2019 Census · Nat avg: 38.7%</div>
+    </div>
+    <div class="panel-section panel-section--all" data-section="all">
+      <button class="profile-toggle-btn" id="profile-toggle" onclick="toggleFullProfile()">▼ View full county profile</button>
+    </div>
   `};
 }
 
@@ -707,6 +727,7 @@ function showPanel(name, p){
   const {rank, ts, html} = buildCountyHTML(name, p);
   document.getElementById('panel-rank-line').innerHTML = `<div class="tier-badge" style="background:${ts.bg};color:${ts.color}">${ts.label}</div><div class="rank-tag">#${rank} of 47</div>`;
   document.getElementById('panel-body').innerHTML = html;
+  focusPanel(activeLayer, document.getElementById('panel-body'));
 }
 
 function updateStatsBar(p){
@@ -725,6 +746,7 @@ function showBottomSheet(name, p){
   document.getElementById('sheet-name').textContent = name;
   document.getElementById('sheet-rank-line').innerHTML = `<div class="tier-badge" style="background:${ts.bg};color:${ts.color}">${ts.label}</div><div class="rank-tag">#${rank} of 47</div>`;
   document.getElementById('sheet-body').innerHTML = html;
+  focusPanel(activeLayer, document.getElementById('sheet-body'));
   sheet.classList.add('open');
   sheet.classList.remove('peek');
   sheetOpen = true;
@@ -891,6 +913,51 @@ document.getElementById('drawer-close').addEventListener('click', () => {
   document.querySelectorAll('.rank-btn').forEach(b => b.classList.remove('active'));
 });
 
+
+// ── Tab-contextual panel focus ─────────────────────────────────────────────
+function focusPanel(layer, container){
+  if(!container) return;
+  const sections = container.querySelectorAll('.panel-section');
+  if(!sections.length) return;
+
+  const toggle = container.querySelector('#profile-toggle');
+  const isComposite = layer === 'composite';
+
+  sections.forEach(s => {
+    const sec = s.dataset.section;
+    if(sec === 'all'){
+      // Toggle button row — hide on composite (all already visible)
+      s.style.display = isComposite ? 'none' : '';
+      return;
+    }
+    s.style.display = (isComposite || sec === layer) ? '' : 'none';
+  });
+
+  // Reset toggle state on every county/layer change
+  if(toggle){
+    toggle.textContent = '▼ View full county profile';
+    toggle.dataset.expanded = '0';
+  }
+}
+
+function toggleFullProfile(){
+  const toggle = document.getElementById('profile-toggle');
+  if(!toggle) return;
+  const expanded = toggle.dataset.expanded === '1';
+  const body = document.getElementById('panel-body');
+  const sections = body ? body.querySelectorAll('.panel-section') : [];
+
+  if(expanded){
+    toggle.dataset.expanded = '0';
+    toggle.textContent = '▼ View full county profile';
+    focusPanel(activeLayer, body);
+  } else {
+    toggle.dataset.expanded = '1';
+    toggle.textContent = '▲ Active layer only';
+    sections.forEach(s => { if(s.dataset.section !== 'all') s.style.display = ''; });
+  }
+}
+
 // ── Electricity overlay layers ─────────────────────────────────────────────
 
 // Grid network layer
@@ -955,9 +1022,13 @@ function syncOverlays(){
   if(el) el.addEventListener('change', syncOverlays);
 });
 
-// Sync overlays on every tab switch — listen alongside the original setLayer listener
+// Sync overlays + re-focus panel on every tab switch
 document.querySelectorAll('.layer-tab').forEach(btn => {
-  btn.addEventListener('click', syncOverlays);
+  btn.addEventListener('click', () => {
+    syncOverlays();
+    focusPanel(activeLayer, document.getElementById('panel-body'));
+    focusPanel(activeLayer, document.getElementById('sheet-body'));
+  });
 });
 
 syncOverlays();
