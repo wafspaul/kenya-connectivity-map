@@ -2,7 +2,7 @@
 
 > An open-access interactive platform visualising internet and electricity access across Kenya's 47 counties — built to make digital infrastructure data understandable and actionable.
 
-**🌍 Live:** [kenya-connectivity-map.vercel.app](https://kenya-connectivity-map.vercel.app)
+**🌍 Live:** [www.kenyaconnectivitymap.co.ke](https://www.kenyaconnectivitymap.co.ke)
 
 ---
 
@@ -85,7 +85,7 @@ The decision to use a single HTML file was intentional: it makes the project max
 
 ## How to Use the Map
 
-1. **Visit** [kenya-connectivity-map.vercel.app](https://kenya-connectivity-map.vercel.app)
+1. **Visit** [www.kenyaconnectivitymap.co.ke](https://www.kenyaconnectivitymap.co.ke)
 2. **Select a layer** using the tabs at the top (Composite, Internet, Towers, Speed, Electricity)
 3. **Click any county** to open a detail panel with its stats, rank, and comparison to the national average
 4. **Toggle overlays** on the Electricity layer to show/hide the transmission grid and mini-grid markers
@@ -155,8 +155,9 @@ Data layers retain their original licenses:
 
 ## About
 
-Built by **Paul Wafula** — a digital content creator and data practitioner based in Kenya.
+Built by **Paul Wamocha** — AI for Education and Digital Inclusion specialist, digital skills trainer, and data practitioner based in Nairobi, Kenya.
 
 The Kenya Connectivity Map is part of a broader effort to make Kenya's digital infrastructure data publicly accessible and understandable. If you work in connectivity, policy, NGOs, or rural development and would find county-level data useful for your work, reach out.
 
-🔗 [kenya-connectivity-map.vercel.app](https://kenya-connectivity-map.vercel.app)
+🔗 [www.kenyaconnectivitymap.co.ke](https://www.kenyaconnectivitymap.co.ke)
+🔗 [paulwamocha.work](https://paulwamocha.work)
