@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#080d18"/>
+  <rect width="1200" height="4" fill="#00c8f0"/>
+  <rect x="60" y="80" width="4" height="80" fill="#00c8f0"/>
+  <text x="84" y="140" font-family="Arial Black,Arial" font-weight="900" font-size="56" fill="#dce8f5">Kenya Connectivity Map</text>
+  <text x="84" y="195" font-family="Arial,sans-serif" font-size="26" fill="#7a8fa8">Internet &amp; Electricity Coverage Across All 47 Counties</text>
+  <rect x="60" y="260" width="240" height="110" rx="8" fill="#0e1525" stroke="#00c8f0" stroke-width="1.5"/>
+  <text x="180" y="305" font-family="Arial Black,Arial" font-weight="900" font-size="38" fill="#00c8f0" text-anchor="middle">47</text>
+  <text x="180" y="340" font-family="Arial,sans-serif" font-size="16" fill="#7a8fa8" text-anchor="middle">Counties Mapped</text>
+  <rect x="320" y="260" width="240" height="110" rx="8" fill="#0e1525" stroke="#1c2a42" stroke-width="1"/>
+  <text x="440" y="305" font-family="Arial Black,Arial" font-weight="900" font-size="38" fill="#10b981" text-anchor="middle">5</text>
+  <text x="440" y="340" font-family="Arial,sans-serif" font-size="16" fill="#7a8fa8" text-anchor="middle">Data Layers</text>
+  <rect x="580" y="260" width="240" height="110" rx="8" fill="#0e1525" stroke="#1c2a42" stroke-width="1"/>
+  <text x="700" y="305" font-family="Arial Black,Arial" font-weight="900" font-size="38" fill="#f59e0b" text-anchor="middle">169</text>
+  <text x="700" y="340" font-family="Arial,sans-serif" font-size="16" fill="#7a8fa8" text-anchor="middle">Mini-Grid Sites</text>
+  <rect x="60" y="410" width="110" height="34" rx="4" fill="#0e1525" stroke="#1c2a42"/>
+  <text x="115" y="432" font-family="Arial,sans-serif" font-size="14" fill="#7a8fa8" text-anchor="middle">NGOs</text>
+  <rect x="185" y="410" width="110" height="34" rx="4" fill="#0e1525" stroke="#1c2a42"/>
+  <text x="240" y="432" font-family="Arial,sans-serif" font-size="14" fill="#7a8fa8" text-anchor="middle">Telcos</text>
+  <rect x="310" y="410" width="200" height="34" rx="4" fill="#0e1525" stroke="#1c2a42"/>
+  <text x="410" y="432" font-family="Arial,sans-serif" font-size="14" fill="#7a8fa8" text-anchor="middle">County Govts</text>
+  <rect x="525" y="410" width="110" height="34" rx="4" fill="#0e1525" stroke="#1c2a42"/>
+  <text x="580" y="432" font-family="Arial,sans-serif" font-size="14" fill="#7a8fa8" text-anchor="middle">EdTech</text>
+  <text x="84" y="560" font-family="Arial,sans-serif" font-size="20" fill="#00c8f0">www.kenyaconnectivitymap.co.ke</text>
+  <rect x="1070" y="240" width="90" height="90" rx="12" fill="#00c8f0"/>
+  <text x="1115" y="303" font-family="Arial Black,Arial" font-weight="900" font-size="38" fill="#080d18" text-anchor="middle">KE</text>
+</svg>
