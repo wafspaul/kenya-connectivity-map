@@ -8,7 +8,7 @@
 
 ## What It Shows
 
-The map has five selectable layers, each covering a different dimension of connectivity:
+The map has six selectable layers, each covering a different dimension of connectivity:
 
 | Layer | What it measures |
 |-------|-----------------|
@@ -17,12 +17,18 @@ The map has five selectable layers, each covering a different dimension of conne
 | 📶 Tower Density | Mobile cell tower count per 100 km² (OpenCelliD — 144,834 towers) |
 | 🚀 Mobile Speeds | Average download speed in Mbps (Ookla Speedtest Intelligence, Q4 2024) |
 | ⚡ Electricity Access | % of households with electricity access (2019 Kenya Population & Housing Census) |
+| 🎓 Schools (Digital Learning) | % of primary schools with DLP devices installed (ICT Authority DigiSchool), plus 29,700 geolocated schools (Giga/UNICEF-ITU) |
 
 **Electricity overlays** (visible on the Electricity layer):
 - 🔌 Transmission grid — 66 kV, 132 kV, and 220 kV lines
 - 🟢 Existing mini-grids (22 sites)
 - 🟡 Mini-grids under development (26 sites)
 - 🟣 Proposed KOSAP mini-grid sites (121 sites)
+
+**School overlays** (visible on the Schools layer):
+- 🔵 Primary schools, clustered (20,586 schools)
+- 🟣 Secondary schools, clustered (9,081 schools)
+- Internet connectivity per school is not yet shown. That data lives in Giga's School Profile API, access requested, approval pending. Markers currently show location and device data only.
 
 Click any county to see its stats in a detailed panel. Use the layer tabs at the top to switch metrics.
 
@@ -48,6 +54,9 @@ This map fills that gap. It is built for businesses planning expansion into unde
 | Mini-grids (existing) | ENERGYDATA.INFO — Kenya Mini-Grid Registry | 2023 | 22 operational sites |
 | Mini-grids (development) | ENERGYDATA.INFO — Kenya Mini-Grid Registry | 2023 | 26 sites under development |
 | KOSAP sites | ENERGYDATA.INFO — KOSAP Proposed Sites | 2023 | 121 proposed Last Mile Connectivity Programme sites |
+| School locations | Giga (UNICEF-ITU School Connectivity Project), School Location API | 2026 | 29,700 geolocated Kenyan schools, licensed under ODbL, credited to Giga and its contributors |
+| Digital Literacy Programme (DLP) | ICT Authority DigiSchool dashboard | 2026 | County-level device installation data (learner devices, teacher devices, routers, projectors); scraped from the public dashboard |
+| Sub-county boundaries | UN OCHA Common Operational Datasets (COD-AB), admin level 2 | 2019 vintage | 290 sub-counties, used to assign each school to a county and sub-county |
 
 ---
 
@@ -122,7 +131,10 @@ python -m http.server 8080
 - [x] Electricity access layer (2019 Census)
 - [x] Transmission grid overlay (66–220 kV)
 - [x] Mini-grid markers (existing, under development, KOSAP proposed)
-- [ ] Sub-county / ward-level data (pending CA data request)
+- [x] Schools layer: DLP device data by county, 29,700 geolocated schools (Giga)
+- [x] Sub-county boundaries loaded (OCHA COD-AB), used for the schools spatial join
+- [ ] Sub-county / ward-level choropleth for internet and electricity (pending CA, KPLC, REREC data)
+- [ ] Per-school internet connectivity (pending Giga School Profile API approval)
 - [ ] Fiber / fixed broadband layer (pending data sourcing)
 - [ ] Methodology page on the live site
 - [ ] Updated electricity data when 2024 KPLC figures are released
@@ -136,8 +148,9 @@ python -m http.server 8080
 Formal data requests have been submitted to:
 - **KPLC (Kenya Power and Lighting Company)** — county-level grid connection data, customer counts, infrastructure coverage
 - **REREC (Rural Electrification and Renewable Energy Corporation)** — rural electrification project locations, mini-grid coordinates, KOSAP programme status
+- **Giga (UNICEF-ITU)** — School Profile API access, for per-school internet connectivity, coverage, and infrastructure data
 
-Responses pending as of March 2026.
+Responses pending as of July 2026.
 
 ---
 
@@ -150,6 +163,9 @@ Data layers retain their original licenses:
 - OpenCelliD — [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
 - Ookla Speedtest Intelligence — used under Ookla's open data terms
 - ENERGYDATA.INFO datasets — Creative Commons Attribution 4.0 International
+- Giga school location data — [Open Data Commons Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/), credited to Giga and its contributors; includes data from OpenStreetMap
+- DigiSchool / DLP device data — ICT Authority, Kenya government open data
+- Sub-county boundaries — UN OCHA Common Operational Datasets (COD-AB)
 
 ---
 
