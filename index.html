@@ -423,6 +423,44 @@ header {
   .logo h1 { display:none; } /* just the mark on very small phones */
   .search-wrap input { font-size:13px; } /* prevent iOS zoom on input focus */
 }
+
+/* ── Methodology modal ─────────────────────────────────── */
+.methodology-btn {
+  display:flex; align-items:center; gap:5px; cursor:pointer;
+  border:1px solid var(--border2); background:transparent; color:var(--text-dim);
+  border-radius:8px; padding:7px 12px; font-size:12px; font-weight:600; font-family:var(--fb);
+  white-space:nowrap;
+}
+.methodology-btn:hover { color:var(--text); background:var(--surface2); border-color:var(--accent); }
+@media (max-width: 900px) { .methodology-btn span.mb-label { display:none; } }
+
+.modal-overlay {
+  display:none; position:fixed; inset:0; z-index:3000;
+  background:rgba(4,7,14,0.72); backdrop-filter:blur(2px);
+  align-items:center; justify-content:center; padding:20px;
+}
+.modal-overlay.open { display:flex; }
+.modal-box {
+  background:var(--surface); border:1px solid var(--border2); border-radius:14px;
+  max-width:640px; width:100%; max-height:85vh; overflow-y:auto;
+  padding:26px 28px; box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+.modal-box h2 { font-size:19px; margin:0 0 14px; color:var(--text); }
+.modal-box h3 { font-size:13px; text-transform:uppercase; letter-spacing:.08em; color:var(--accent); margin:22px 0 8px; }
+.modal-box p, .modal-box li { font-size:13px; line-height:1.6; color:var(--text-dim); }
+.modal-box code { background:var(--surface3); padding:2px 6px; border-radius:5px; color:var(--text); font-size:12px; }
+.modal-box .formula-box {
+  background:var(--surface3); border:1px solid var(--border2); border-radius:8px;
+  padding:12px 14px; font-family:monospace; font-size:12.5px; color:var(--text); margin:8px 0 14px;
+}
+.modal-box table { width:100%; border-collapse:collapse; margin:8px 0 4px; font-size:12px; }
+.modal-box th, .modal-box td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--border); color:var(--text-dim); }
+.modal-box th { color:var(--text); font-weight:700; }
+.modal-close {
+  position:sticky; top:0; float:right; cursor:pointer; border:none; background:var(--surface2);
+  color:var(--text-dim); width:28px; height:28px; border-radius:8px; font-size:15px; margin-left:10px;
+}
+.modal-close:hover { color:var(--text); background:var(--surface3); }
 </style>
 </head>
 <body>
@@ -448,13 +486,55 @@ header {
     <button class="layer-tab" data-layer="speed">Speed</button>
     <button class="layer-tab" data-layer="electricity">⚡ Electricity</button>
     <button class="layer-tab" data-layer="schools">🎓 Schools</button>
+  <button class="layer-tab" data-layer="employment">💼 Employment</button>
   </div>
 
   <div class="ranking-toggle">
     <button class="rank-btn" id="btn-top5" data-mode="top5">▲ Top 10</button>
     <button class="rank-btn" id="btn-bottom5" data-mode="bottom10">▼ Bottom 10</button>
   </div>
+
+  <button class="methodology-btn" id="btn-methodology" title="Methodology & data sources">ⓘ <span class="mb-label">Methodology</span></button>
 </header>
+
+<!-- ── Methodology modal ─────────────────────────────────── -->
+<div class="modal-overlay" id="methodology-modal">
+  <div class="modal-box">
+    <button class="modal-close" id="methodology-close">✕</button>
+    <h2>Methodology &amp; Data Sources</h2>
+    <p>The Kenya Connectivity Map combines six data layers, four of which roll up into a single composite score. This page explains how that score is built, what each layer measures, where the data comes from, and where it falls short.</p>
+
+    <h3>Composite Score Formula</h3>
+    <div class="formula-box">Composite = (Internet Usage × 0.35) + (Tower Density × 0.25) + (Mobile Speed × 0.25) + (Electricity Access × 0.15)</div>
+    <p>Each dimension is normalised to a 0–100 scale before weighting. Internet usage carries the most weight since it is the most direct measure of digital access. Electricity is weighted lower because it is a precondition for connectivity, not a connectivity metric on its own.</p>
+
+    <h3>Data Sources</h3>
+    <table>
+      <tr><th>Layer</th><th>Source</th><th>Year</th></tr>
+      <tr><td>Internet usage</td><td>KNBS / 2022 KDHS</td><td>2022</td></tr>
+      <tr><td>Tower density</td><td>OpenCelliD</td><td>Mar 2026</td></tr>
+      <tr><td>Mobile speed</td><td>Ookla Speedtest Intelligence</td><td>Q1 2026</td></tr>
+      <tr><td>Electricity access</td><td>2019 Kenya Population &amp; Housing Census</td><td>2019</td></tr>
+      <tr><td>Grid &amp; mini-grids</td><td>ENERGYDATA.INFO — Kenya Power Grid &amp; Mini-Grid Registry</td><td>2023</td></tr>
+      <tr><td>School locations</td><td>Giga (UNICEF/ITU) School Location API</td><td>2026</td></tr>
+      <tr><td>School devices (DLP)</td><td>ICT Authority DigiSchool dashboard</td><td>2026</td></tr>
+      <tr><td>Sub-county boundaries</td><td>UN OCHA COD-AB, admin level 2</td><td>2019 vintage</td></tr>
+    </table>
+
+    <h3>Known Limitations</h3>
+    <ul>
+      <li><strong>Tower density</strong> is crowd-sourced and may undercount towers in low-population areas. Treat as indicative, not comprehensive.</li>
+      <li><strong>Mobile speed</strong> reflects users who ran a speed test, which skews toward urban and higher-income users. Rural speeds may be overestimated relative to typical experience.</li>
+      <li><strong>Starlink bias:</strong> a handful of Starlink users in a county can inflate its average speed. Read speed alongside tower density to separate ground-based from satellite coverage.</li>
+      <li><strong>Electricity (2019):</strong> county-level figures are still the 2019 census, the most recent public breakdown available. National access has since risen to roughly 76% (KPLC, 2025), but no newer county-level split has been published.</li>
+      <li><strong>Per-school internet connectivity</strong> is not yet available. Giga's School Profile API covers this; access has been requested and is pending approval.</li>
+    </ul>
+
+    <h3>License</h3>
+    <p>Code: MIT License. Data layers keep their original licenses, KNBS and DigiSchool data is Kenya government open data, OpenCelliD is CC BY-SA 4.0, ENERGYDATA.INFO datasets are CC BY 4.0, Giga school data is ODbL (credited to Giga and OpenStreetMap contributors), and OCHA boundaries are Common Operational Datasets.</p>
+    <p style="margin-top:16px"><a href="https://github.com/wafspaul/kenya-connectivity-map" style="color:var(--accent)" target="_blank" rel="noopener">Full README &amp; source on GitHub →</a></p>
+  </div>
+</div>
 
 <!-- ── MOBILE: layer tabs row ─────────────────────────── -->
 <div class="mobile-tabs-row" id="mobile-tabs">
@@ -464,6 +544,7 @@ header {
   <button class="layer-tab" data-layer="speed">Speed</button>
   <button class="layer-tab" data-layer="electricity">⚡ Electricity</button>
   <button class="layer-tab" data-layer="schools">🎓 Schools</button>
+  <button class="layer-tab" data-layer="employment">💼 Employment</button>
 </div>
 
 <!-- ── MAIN ───────────────────────────────────────────── -->
@@ -612,6 +693,9 @@ var DLP_DATA={"Baringo":{"total":635,"installed":633,"pending":2,"pct":99.69,"le
 const COUNTY_ALIASES = { 'Elgeyo-Marakwet':'Elgeyo Marakwet', "Murang'a":'Muranga', 'Tharaka-Nithi':'Tharaka Nithi' };
 function dlpFor(name){ return DLP_DATA[COUNTY_ALIASES[name] || name]; }
 
+var EMPLOYMENT_DATA={"Mombasa":{"total":1043603,"working":423439,"seeking":141942,"outside":477965,"notStated":257,"rate":25.1,"lfpr":54.2},"Kwale":{"total":728767,"working":333587,"seeking":44175,"outside":350840,"notStated":165,"rate":11.7,"lfpr":51.8},"Samburu":{"total":167210,"working":74463,"seeking":9095,"outside":83584,"notStated":68,"rate":10.9,"lfpr":50.0},"Kilifi":{"total":1240674,"working":534420,"seeking":77211,"outside":628808,"notStated":235,"rate":12.6,"lfpr":49.3},"Tana River":{"total":261570,"working":118026,"seeking":25851,"outside":117572,"notStated":121,"rate":18.0,"lfpr":55.0},"Lamu":{"total":123234,"working":60022,"seeking":7228,"outside":55948,"notStated":36,"rate":10.7,"lfpr":54.6},"Taita-Taveta":{"total":297180,"working":160509,"seeking":16971,"outside":119633,"notStated":67,"rate":9.6,"lfpr":59.7},"Garissa":{"total":723880,"working":253293,"seeking":172996,"outside":297439,"notStated":152,"rate":40.6,"lfpr":58.9},"Wajir":{"total":652575,"working":290686,"seeking":116074,"outside":245753,"notStated":0,"rate":28.5,"lfpr":62.3},"Mandera":{"total":701187,"working":303296,"seeking":93806,"outside":303960,"notStated":125,"rate":23.6,"lfpr":56.6},"Marsabit":{"total":378184,"working":178797,"seeking":47232,"outside":151967,"notStated":188,"rate":20.9,"lfpr":59.8},"Isiolo":{"total":227379,"working":101678,"seeking":27529,"outside":98134,"notStated":38,"rate":21.3,"lfpr":56.8},"Meru":{"total":1365848,"working":700387,"seeking":76275,"outside":588805,"notStated":381,"rate":9.8,"lfpr":56.9},"Tharaka-Nithi":{"total":351034,"working":191231,"seeking":13707,"outside":146026,"notStated":70,"rate":6.7,"lfpr":58.4},"Embu":{"total":543425,"working":317105,"seeking":19986,"outside":206286,"notStated":48,"rate":5.9,"lfpr":62.0},"Kitui":{"total":1004160,"working":486486,"seeking":31902,"outside":485625,"notStated":147,"rate":6.2,"lfpr":51.6},"Machakos":{"total":1267555,"working":670368,"seeking":76771,"outside":520217,"notStated":199,"rate":10.3,"lfpr":58.9},"Makueni":{"total":880923,"working":456299,"seeking":32008,"outside":392458,"notStated":158,"rate":6.6,"lfpr":55.4},"Nyandarua":{"total":566158,"working":318818,"seeking":9880,"outside":237397,"notStated":63,"rate":3.0,"lfpr":58.1},"Nyeri":{"total":679998,"working":404432,"seeking":24702,"outside":250817,"notStated":47,"rate":5.8,"lfpr":63.1},"Kirinyaga":{"total":548367,"working":337519,"seeking":17941,"outside":192868,"notStated":39,"rate":5.0,"lfpr":64.8},"Murang'a":{"total":942756,"working":549832,"seeking":33957,"outside":358831,"notStated":136,"rate":5.8,"lfpr":61.9},"Kiambu":{"total":2125316,"working":1116365,"seeking":165846,"outside":842577,"notStated":528,"rate":12.9,"lfpr":60.3},"Turkana":{"total":791011,"working":327808,"seeking":145174,"outside":317342,"notStated":687,"rate":30.7,"lfpr":59.8},"West Pokot":{"total":505029,"working":241125,"seeking":19661,"outside":244145,"notStated":98,"rate":7.5,"lfpr":51.6},"Trans Nzoia":{"total":856006,"working":360674,"seeking":38655,"outside":456613,"notStated":64,"rate":9.7,"lfpr":46.7},"Uasin Gishu":{"total":1012918,"working":451826,"seeking":65879,"outside":495077,"notStated":136,"rate":12.7,"lfpr":51.1},"Elgeyo-Marakwet":{"total":392505,"working":172899,"seeking":15407,"outside":204139,"notStated":60,"rate":8.2,"lfpr":48.0},"Nandi":{"total":777779,"working":366657,"seeking":25493,"outside":385549,"notStated":80,"rate":6.5,"lfpr":50.4},"Baringo":{"total":567970,"working":273503,"seeking":28604,"outside":265820,"notStated":43,"rate":9.5,"lfpr":53.2},"Laikipia":{"total":448546,"working":239295,"seeking":21564,"outside":187649,"notStated":38,"rate":8.3,"lfpr":58.2},"Nakuru":{"total":1870222,"working":909666,"seeking":94842,"outside":865402,"notStated":312,"rate":9.4,"lfpr":53.7},"Narok":{"total":961649,"working":464247,"seeking":23739,"outside":473475,"notStated":188,"rate":4.9,"lfpr":50.7},"Kajiado":{"total":951420,"working":452921,"seeking":79919,"outside":418261,"notStated":319,"rate":15.0,"lfpr":56.0},"Kericho":{"total":787507,"working":391168,"seeking":21807,"outside":374322,"notStated":210,"rate":5.3,"lfpr":52.4},"Bomet":{"total":762274,"working":362007,"seeking":16249,"outside":383946,"notStated":72,"rate":4.3,"lfpr":49.6},"Kakamega":{"total":1635814,"working":736602,"seeking":49344,"outside":849497,"notStated":371,"rate":6.3,"lfpr":48.0},"Vihiga":{"total":522668,"working":250123,"seeking":15154,"outside":257299,"notStated":92,"rate":5.7,"lfpr":50.8},"Bungoma":{"total":1445146,"working":629607,"seeking":40627,"outside":774779,"notStated":133,"rate":6.1,"lfpr":46.4},"Busia":{"total":773860,"working":351407,"seeking":22325,"outside":400058,"notStated":70,"rate":6.0,"lfpr":48.3},"Siaya":{"total":868276,"working":412930,"seeking":22225,"outside":432797,"notStated":324,"rate":5.1,"lfpr":50.1},"Kisumu":{"total":1004086,"working":434312,"seeking":50843,"outside":518631,"notStated":300,"rate":10.5,"lfpr":48.3},"Homa Bay":{"total":970400,"working":419128,"seeking":27424,"outside":523766,"notStated":82,"rate":6.1,"lfpr":46.0},"Migori":{"total":948018,"working":400538,"seeking":33117,"outside":514155,"notStated":208,"rate":7.6,"lfpr":45.7},"Kisii":{"total":1117320,"working":507691,"seeking":41266,"outside":568224,"notStated":139,"rate":7.5,"lfpr":49.1},"Nyamira":{"total":538716,"working":250423,"seeking":18614,"outside":269627,"notStated":52,"rate":6.9,"lfpr":49.9},"Nairobi":{"total":3814871,"working":1812311,"seeking":422288,"outside":1578696,"notStated":1576,"rate":18.9,"lfpr":58.6}};
+function employmentFor(name){ return EMPLOYMENT_DATA[COUNTY_ALIASES[name] || name]; }
+
 const LAYERS = {
   composite: {
     label:'Composite Score',
@@ -654,6 +738,13 @@ const LAYERS = {
     getColor: v => v===undefined||v===null?'#1e2d45':v>=99?'#10b981':v>=95?'#6ee7b7':v>=85?'#f59e0b':v>=70?'#f97316':'#ef4444',
     legendItems:[{color:'#10b981',label:'≥99% devices installed'},{color:'#6ee7b7',label:'95–98.9%'},{color:'#f59e0b',label:'85–94.9%'},{color:'#f97316',label:'70–84.9%'},{color:'#ef4444',label:'<70%'}],
     format: v => v===undefined||v===null?'N/A':v.toFixed(1)+'% devices installed', natAvg:98.7,
+  },
+  employment:{
+    label:'Unemployment Rate',
+    getValue: p => { const d = employmentFor(p.county || p.adm1_name); return d ? d.rate : undefined; },
+    getColor: v => v===undefined||v===null?'#1e2d45':v<=6?'#10b981':v<=10?'#6ee7b7':v<=15?'#f59e0b':v<=25?'#f97316':'#ef4444',
+    legendItems:[{color:'#10b981',label:'≤6% (low)'},{color:'#6ee7b7',label:'6–10%'},{color:'#f59e0b',label:'10–15%'},{color:'#f97316',label:'15–25%'},{color:'#ef4444',label:'>25% (high)'}],
+    format: v => v===undefined||v===null?'N/A':v.toFixed(1)+'% unemployment', natAvg:11.8,
   }
 };
 
@@ -783,6 +874,7 @@ function buildCountyHTML(name, p){
   const _schSecondary = _schRows.filter(r => r[3] === 1).length;
   const _schOther = _schRows.length - _schPrimary - _schSecondary;
   const _dlp = dlpFor(name);
+  const _emp = employmentFor(name);
 
   function cmpBar(value, natAvg, max, color){
     const pct = Math.min(100,(value/max)*100).toFixed(1);
@@ -860,6 +952,16 @@ function buildCountyHTML(name, p){
         ${_schOther ? `<div style="font-size:10.5px;color:var(--text-dim);margin-bottom:3px"><span style="color:#94a3b8;font-size:11px">●</span> <strong style="color:var(--text)">${_schOther.toLocaleString()}</strong> other</div>` : ''}
         <div style="font-size:9px;color:var(--text-muted);margin-top:6px;font-style:italic">Internet connectivity per school pending Giga School Profile approval</div>
       </div>
+    </div>
+    <div class="panel-section" data-section="employment">
+      <div class="section-title">💼 Employment (2019 Census)</div>
+      <div class="metric-row"><span class="metric-label">Unemployment rate</span><span class="metric-val">${_emp ? _emp.rate.toFixed(1)+'%' : 'N/A'}</span></div>
+      ${_emp ? cmpBar(_emp.rate, 11.8, 40, '#fb923c') : ''}
+      ${_emp ? `<div class="metric-row"><span class="metric-label">Labour force participation</span><span class="metric-val">${_emp.lfpr.toFixed(1)}%</span></div>` : ''}
+      ${_emp ? `<div class="metric-row"><span class="metric-label">Working</span><span class="metric-val">${_emp.working.toLocaleString()}</span></div>` : ''}
+      ${_emp ? `<div class="metric-row"><span class="metric-label">Seeking work</span><span class="metric-val">${_emp.seeking.toLocaleString()}</span></div>` : ''}
+      ${_emp ? `<div class="metric-row"><span class="metric-label">Outside labour force</span><span class="metric-val">${_emp.outside.toLocaleString()}</span></div>` : ''}
+      <div style="font-size:9.5px;color:var(--text-muted);margin-top:3px;opacity:.8">2019 KNBS Census, Vol IV, Table 2.8a (population age 5+) · Nat avg unemployment: 11.8% · figures predate AI-driven labour shifts covered elsewhere in this project</div>
     </div>
     <div class="panel-section panel-section--all" data-section="all">
       <button class="profile-toggle-btn" id="profile-toggle" onclick="toggleFullProfile(this)">▼ View full county profile</button>
@@ -1251,6 +1353,18 @@ document.querySelectorAll('.layer-tab').forEach(btn => {
 });
 
 syncOverlays();
+
+// Methodology modal
+(function(){
+  const modal = document.getElementById('methodology-modal');
+  const openBtn = document.getElementById('btn-methodology');
+  const closeBtn = document.getElementById('methodology-close');
+  if(!modal || !openBtn) return;
+  openBtn.addEventListener('click', () => modal.classList.add('open'));
+  closeBtn.addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('open'); });
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') modal.classList.remove('open'); });
+})();
 
 </script>
 </body>
