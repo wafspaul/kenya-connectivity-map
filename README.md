@@ -46,10 +46,11 @@ This map fills that gap. It is built for businesses planning expansion into unde
 
 | Layer | Source | Year | Notes |
 |-------|--------|------|-------|
-| Internet usage | KNBS / 2022 Kenya Demographic and Health Survey (KDHS) | 2022 | County-level % using internet in past 12 months |
-| Tower density | OpenCelliD | 2024 | 144,834 towers filtered to Kenya bounding box |
-| Mobile speeds | Ookla Speedtest Intelligence | Q4 2024 | Tile-level data aggregated to county; median download speed |
-| Electricity access | 2019 Kenya Population & Housing Census (KNBS) | 2019 | % of households connected to electricity grid |
+| Internet usage | KNBS / 2022 KDHS + 2023-24 Kenya Housing Survey | 2022 / 2023-24 | County-level % using internet; two non-comparable metrics (household vs. individual), both shown |
+| Tower density | OpenCelliD | March 2026 refresh (all 47 counties reconciled August 2026) | Towers per 100km², percentile-rank normalised August 2026 (see Methodology) |
+| Mobile speeds | Ookla Speedtest Open Data | Q1 2026 | Tile-level data aggregated to county; average download/upload speed and latency |
+| Electricity access | 2019 Kenya Population & Housing Census (KNBS) | 2019 | % of households connected to electricity grid; most recent county-level source available, KPLC/REREC requests for an update unanswered as of August 2026 |
+| Employment / unemployment | 2019 Kenya Population & Housing Census, Vol. IV, Table 2.8a (KNBS) | 2019 | Unemployment rate (ILO definition) and labour force participation rate by county |
 | Transmission grid | ENERGYDATA.INFO — Kenya Power Grid | 2023 | 66 kV / 132 kV / 220 kV lines; 347 features |
 | Mini-grids (existing) | ENERGYDATA.INFO — Kenya Mini-Grid Registry | 2023 | 22 operational sites |
 | Mini-grids (development) | ENERGYDATA.INFO — Kenya Mini-Grid Registry | 2023 | 26 sites under development |
@@ -70,7 +71,9 @@ The composite connectivity score combines all four primary data layers using a w
 Composite = (Internet Usage × 0.35) + (Tower Density × 0.25) + (Mobile Speed × 0.25) + (Electricity Access × 0.15)
 ```
 
-Each dimension is normalised to a 0–100 scale before weighting. Internet usage is weighted most heavily as the most direct measure of digital access; electricity is weighted lower since it is a precondition rather than a connectivity metric itself.
+Each dimension is normalised to a 0–100 scale before weighting. Internet usage is weighted most heavily as the most direct measure of digital access; electricity is weighted lower since it is a precondition rather than a connectivity metric itself. For the four counties with a flagged Starlink speed bias (Garissa, Kitui, Mandera, Wajir), the speed term is dropped and the remaining weights (0.35 / 0.25 / 0.15) are rescaled to sum to 1.
+
+**Tower density normalisation (updated August 2026):** tower density per county ranges from 0.3 to 4,915.7 towers per 100km², a distribution heavily skewed by a small number of high-density urban counties (Nairobi, Mombasa, Kiambu). Tower density is normalised using **percentile rank** across all 47 counties, not min-max scaling, so a handful of outliers don't compress every other county's score toward zero. A county's tower score is its rank position among all 47 counties, scaled to 0–100.
 
 ### Data quality notes
 
