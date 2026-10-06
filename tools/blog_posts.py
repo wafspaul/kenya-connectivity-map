@@ -75,7 +75,7 @@ def build(c):
     posts.append(dict(
         slug='electricity-access-by-county-in-kenya', date=DATE, img='pylons',
         title=f"{NUM.get(n_low, str(n_low))} Kenyan counties have electricity access below 20%",
-        desc=f"{n_low} Kenyan counties sit under 20% electricity access in the 2019 census data: {names([disp(p['county']) for p in low_e])}. Here is how the rest compare.",
+        desc=f"{n_low} Kenyan counties sit under 20% electricity access in the 2019 census, led by {disp(low_e[0]['county'])} at {low_e[0]['elec_pct']:.1f}%. See how the rest compare.",
         faq=[("Which Kenyan county has the lowest electricity access?", f"Turkana, at {tur['elec_pct']:.1f}% in the 2019 census data used on the map."),
              ("Which county has the highest electricity access in Kenya?", f"Nairobi, at {nbo['elec_pct']:.1f}%, followed by {elec[1]['county']} ({elec[1]['elec_pct']:.1f}%) and {elec[2]['county']} ({elec[2]['elec_pct']:.1f}%).")],
         html=f"""<p>Electricity is the first layer of connectivity. If a household cannot charge a phone, mobile coverage means little. So I mapped electricity access for every county using the 2019 Population and Housing Census.</p>
@@ -261,6 +261,7 @@ def build(c):
     lam_sch = sum(c['counts']['Lamu'])
     assert lam['rank'] == 36 and lam['tier'] == 'Low' and R_ELEC['Lamu'] == 12 and R_INT['Lamu'] == 27
     posts.append(dict(
+        stitle='Lamu connectivity data as the refinery breaks ground',
         slug='lamu-county-connectivity-and-the-lamu-refinery', date=DATE, img='lamu',
         title='What the connectivity data says about Lamu as the refinery breaks ground',
         desc=f"Lamu ranks {ordn(lam['rank'])} of 47 on connectivity, with {lam['elec_pct']:.1f}% electricity access but only {lam['towers_density']:.1f} cell towers per 100 km². The county data behind the refinery news.",
@@ -286,9 +287,10 @@ def build(c):
     assert len(low8) == 8 and max(p['internet_ind'] for p in low8) < 35
     rows = [(L(p['county']), f"{p['composite']:.1f}", f"{p['internet_ind']:.1f}%", f"{p['towers_density']:.1f}", f"{p['area_sqkm']:,.0f}") for p in low8]
     posts.append(dict(
+        stitle="Kenya's $390 million fibre tender and who needs it",
         slug='kenya-fibre-tender-and-the-least-connected-counties', date=DATE, img='fibre',
         title='Kenya opens a $390 million fibre tender. Which counties need it most?',
-        desc=f"ICTA opened a World Bank funded fibre tender with bids closing 29 October 2026. Here are the {len(low8)} counties at the bottom of my connectivity ranking, to check against the routes.",
+        desc=f"ICTA's World Bank funded fibre tender closes 29 October 2026. These {len(low8)} counties sit at the bottom of my connectivity ranking.",
         faq=[("What is the ICTA fibre tender?", "ICTA opened an international tender on 16 September 2026 under the Kenya Digital Economy Acceleration Project. The World Bank is financing it with USD 390 million in credits. Lot 1 covers national backbone links and Lot 2 covers cross border and metro links."),
              ("When do bids close?", "Bids close on 29 October 2026 at 10:00 a.m. East African Time at Telposta Towers in Nairobi, according to TechAfrica News.")],
         html=f"""<p>The Information and Communications Technology Authority opened an international tender on 16 September 2026 to expand the national fibre backbone and cross border links. <a href="https://techafricanews.com/2026/09/16/kenya-icta-tender-national-fibre-cross-border-connectivity/" rel="noopener">TechAfrica News reports</a> that the World Bank is financing it with USD 390 million in credits under the Kenya Digital Economy Acceleration Project. Bids close on 29 October 2026.</p>
@@ -307,6 +309,7 @@ def build(c):
     kil, kwa, mom = by['Kilifi'], by['Kwale'], by['Mombasa']
     assert kil['elec_pct'] < 38.7 and kwa['elec_pct'] < 38.7
     posts.append(dict(
+        stitle='Kilifi and Kwale substations and electricity access',
         slug='kilifi-and-kwale-substations-and-electricity-access', date=DATE, img='substation',
         title='Two new Coast substations, and what Kilifi and Kwale electricity access looks like',
         desc=f"Kenya Power is building Sh765 million of substations in Kilifi and Kwale. Electricity access is {kil['elec_pct']:.1f}% in Kilifi and {kwa['elec_pct']:.1f}% in Kwale, against {mom['elec_pct']:.1f}% in Mombasa.",
@@ -330,6 +333,7 @@ def build(c):
     assert len(sparse) >= 5
     rows = [(L(p['county']), f"{p['towers_density']:.1f}", f"{p['area_sqkm']:,.0f}", f"{p['internet_ind']:.1f}%", f"{p['elec_pct']:.1f}%") for p in sparse]
     posts.append(dict(
+        stitle="Satellite to phone service and Kenya's sparse counties",
         slug='satellite-to-phone-service-and-kenyas-sparse-counties', date=DATE, img='dish',
         title='Satellite to phone service could reach the counties towers miss',
         desc=f"Airtel says its Starlink satellite to phone service is ready, pending approval. {len(sparse)} counties have fewer than two cell towers per 100 km². Here they are.",
@@ -354,6 +358,7 @@ def build(c):
     rows = [(L(p['county']), ordn(R_ELEC[p['county']]), ordn(R_INT[p['county']])) for p in pwr]
     rows2 = [(L(p['county']), ordn(R_ELEC[p['county']]), ordn(R_INT[p['county']])) for p in net]
     posts.append(dict(
+        stitle='Kenyan counties with power but little internet',
         slug='counties-with-power-but-little-internet', date=DATE, img='phone',
         title='Kenyan counties with power but little internet, and the other way round',
         desc=f"Electricity and internet use move together across Kenya's counties, with a correlation of {corr:.2f}. These counties break the pattern, from {disp(pwr[0]['county'])} to {disp(net[0]['county'])}.",

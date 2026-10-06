@@ -65,6 +65,9 @@ footer.site{border-top:1px solid var(--border);padding:22px 16px;text-align:cent
 @media(max-width:900px){.posts{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){ul.plain{columns:1}.posts{grid-template-columns:1fr}}"""
 
 def page(path, title, desc, body, jsonld=None, og_type='website', img=None, extra_head='', wide=False):
+    SUF = ' | Kenya Connectivity Map'
+    t0 = title[:-len(SUF)] if title.endswith(SUF) else title
+    title = t0 + SUF if len(t0 + SUF) <= 65 else t0
     url = SITE + '/' + path.strip('/') + ('/' if path.strip('/') else '')
     img = img or SITE + '/social-preview.png'
     ld = ''.join('<script type="application/ld+json">%s</script>\n' % json.dumps(j, ensure_ascii=False) for j in (jsonld or []))
@@ -162,7 +165,7 @@ def county_page(i, p):
 {extra}
 <p class="src">All figures come from the datasets listed on the <a href="/data/">data and sources page</a>. The composite score formula is explained in <a href="/blog/how-i-built-the-kenya-connectivity-map/">how I built the map</a>.</p>
 {pn}"""
-    title = f"{c} County Internet & Electricity Coverage | Kenya Connectivity Map"
+    title = f"{c} County Internet and Electricity Access | Kenya Connectivity Map"
     desc = f"{c} County ranks {ordinal(p['rank'])} of 47 on connectivity: {p['internet_ind']:.1f}% internet usage, {p['elec_pct']:.1f}% electricity access and {p['towers_density']:,.1f} cell towers per 100 km²."
     u = page(f"counties/{s}", title, desc, body, [crumbs([("Map", SITE + "/"), ("Counties", SITE + "/counties/"), (c, f"{SITE}/counties/{s}/")])])
     urls.append((u, TODAY, '0.7'))
@@ -253,7 +256,7 @@ for n, po in enumerate(posts):
            "author": {"@type": "Person", "name": "Paul Wamocha", "url": "https://paulwamocha.work"}, "image": [photo(po, 1200, 630)],
            "wordCount": words, "mainEntityOfPage": f"{SITE}/blog/{po['slug']}/", "publisher": {"@type": "Person", "name": "Paul Wamocha"}}
     faq_ld = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in po['faq']]}
-    u = page(f"blog/{po['slug']}", po['title'] + ' | Kenya Connectivity Map', po['desc'], body,
+    u = page(f"blog/{po['slug']}", po.get('stitle', po['title']) + ' | Kenya Connectivity Map', po['desc'], body,
              [art, faq_ld, crumbs([("Map", SITE + "/"), ("Blog", SITE + "/blog/"), (po['title'], f"{SITE}/blog/{po['slug']}/")])], 'article', photo(po, 1200, 630), RSS_LINK)
     urls.append((u, po['date'], '0.8'))
     brows += f"""<article class="pc"><a href="/blog/{po['slug']}/"><img src="{photo(po, 600, 315)}" width="600" height="315" alt="{esc(im['alt'])}" loading="lazy" decoding="async"></a><div class="pb"><h2><a href="/blog/{po['slug']}/">{esc(po['title'])}</a></h2><p class="post-meta">{nice(po['date'])} · {mins} min read</p><p>{esc(po['desc'])}</p></div></article>"""
