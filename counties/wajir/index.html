@@ -17,6 +17,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://www.kenyaconnectivitymap.co.ke/social-preview.png">
 <meta name="theme-color" content="#080d18">
+
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Map", "item": "https://www.kenyaconnectivitymap.co.ke/"}, {"@type": "ListItem", "position": 2, "name": "Counties", "item": "https://www.kenyaconnectivitymap.co.ke/counties/"}, {"@type": "ListItem", "position": 3, "name": "Wajir", "item": "https://www.kenyaconnectivitymap.co.ke/counties/wajir/"}]}</script>
@@ -33,14 +34,19 @@ table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:15px}th,t
 .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px}.card b{display:block;font-size:24px;color:var(--accent)}.card small{color:var(--dim)}
 ul.plain{list-style:none;columns:2;gap:20px}ul.plain li{margin-bottom:6px}.pn{display:flex;justify-content:space-between;gap:12px;margin-top:28px;font-size:15px}
 footer.site{border-top:1px solid var(--border);padding:22px 16px;text-align:center;color:var(--dim);font-size:14px}footer.site a{margin:0 8px}
-.src{font-size:14px;color:var(--dim)}.post-meta{color:var(--dim);font-size:14px;margin-bottom:20px}@media(max-width:560px){ul.plain{columns:1}}</style>
+.src{font-size:14px;color:var(--dim)}.post-meta{color:var(--dim);font-size:14px;margin-bottom:20px}.hero{margin:0 0 22px}.hero img{width:100%;height:auto;aspect-ratio:1200/630;object-fit:cover;border-radius:10px;display:block;background:var(--surface2)}
+.hero figcaption{font-size:13px;color:var(--dim);margin-top:6px}.toc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 18px;margin:0 0 24px;font-size:15px}
+.toc b{display:block;margin-bottom:6px}.toc ol{margin-left:20px}.toc li{margin-bottom:3px}h3{font-size:18px;margin:18px 0 6px}
+.posts{display:grid;gap:18px;margin-top:22px}.pc{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:start}.pc img{width:200px;height:105px;object-fit:cover;border-radius:8px;background:var(--surface2)}
+.pc h2,.pc h3{margin:0 0 4px;font-size:19px}.pc p{margin:0;font-size:15px}.related{margin-top:34px}.related ul{margin-left:20px}
+@media(max-width:560px){ul.plain{columns:1}.pc{grid-template-columns:1fr}.pc img{width:100%;height:auto;aspect-ratio:1200/630}}</style>
 </head>
 <body>
 <header class="site"><a class="brand" href="/">Kenya <span>Connectivity</span> Map</a>
 <nav><a href="/">Map</a><a href="/counties/">Counties</a><a href="/blog/">Blog</a><a href="/data/">Data</a></nav></header>
 <main>
 <p class="crumbs"><a href="/">Map</a> / <a href="/counties/">Counties</a> / Wajir</p>
-<h1>Wajir County: internet and electricity coverage</h1>
+<h1>Wajir County internet and electricity coverage</h1>
 <p class="lede">Wajir ranks 43rd of 47 counties on my composite connectivity score, at 18.3 out of 100. That puts it in the lowest tier.</p>
 <a class="cta" href="/#county=wajir">Open Wajir on the map</a>
 <div class="cards"><div class="card"><b>18</b><small>Composite score</small></div><div class="card"><b>24.2%</b><small>Use the internet</small></div><div class="card"><b>14.6%</b><small>Electricity access</small></div><div class="card"><b>43rd</b><small>Of 47 counties</small></div></div>
@@ -48,7 +54,7 @@ footer.site{border-top:1px solid var(--border);padding:22px 16px;text-align:cent
 <p>Average mobile download speed is 35.8 Mbps, 19th of the 46 counties with an unflagged speed figure. Tower density is 0.3 per 100 km², which ranks 47th.</p>
 <h2>Wajir data at a glance</h2>
 <div class="wrap"><table><tr><th>Measure</th><th>Value</th><th>Rank</th><th>Source</th></tr><tr><td>Composite score</td><td><strong>18.3 / 100</strong></td><td>43rd of 47</td><td class='src'>Weighted blend of the four layers below</td></tr><tr><td>Internet usage</td><td><strong>24.2%</strong></td><td>37th of 47</td><td class='src'>KNBS / 2022 KDHS</td></tr><tr><td>Electricity access</td><td><strong>14.6%</strong></td><td>45th of 47</td><td class='src'>2019 Population and Housing Census</td></tr><tr><td>Cell towers per 100 km²</td><td><strong>0.3</strong></td><td>47th of 47</td><td class='src'>OpenCelliD, Mar 2026</td></tr><tr><td>Average download speed</td><td><strong>35.8 Mbps</strong></td><td>19th of 46</td><td class='src'>Ookla Speedtest Intelligence, Q1 2026</td></tr></table></div>
-<h2>Schools</h2><p>The Giga school location data lists 202 schools in Wajir: 158 primary, 44 secondary and 0 other.</p><p>The ICT Authority DigiSchool dashboard shows 211 of 211 schools with Digital Learning Programme devices installed (100.0%).</p><h2>Employment</h2><p>The census lists a labour force participation rate of 62.3% and an unemployment rate of 28.5% in Wajir.</p>
+<h2>Schools</h2><p>The Giga school location data lists 202 schools in Wajir: 158 primary, 44 secondary and 0 other.</p><p>The ICT Authority DigiSchool dashboard shows 211 of 211 schools with Digital Literacy Programme devices installed (100.0%).</p><h2>Employment</h2><p>The census lists a labour force participation rate of 62.3% and an unemployment rate of 28.5% in Wajir.</p>
 <p class="src">All figures come from the datasets listed on the <a href="/data/">data and sources page</a>. The composite score formula is explained in <a href="/blog/how-i-built-the-kenya-connectivity-map/">how I built the map</a>.</p>
 <div class="pn"><span><a href="/counties/west-pokot/">&larr; West Pokot</a></span><span><a href="/counties/samburu/">Samburu &rarr;</a></span></div>
 </main>

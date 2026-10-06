@@ -15,7 +15,7 @@ The map has six selectable layers, each covering a different dimension of connec
 | 📊 Composite Score | Weighted connectivity index combining all four data dimensions |
 | 📡 Internet Usage | % of county population using the internet (KNBS / 2022 KDHS) |
 | 📶 Tower Density | Mobile cell tower count per 100 km² (OpenCelliD — 144,834 towers) |
-| 🚀 Mobile Speeds | Average download speed in Mbps (Ookla Speedtest Intelligence, Q4 2024) |
+| 🚀 Mobile Speeds | Average download speed in Mbps (Ookla Speedtest Intelligence, Q1 2026) |
 | ⚡ Electricity Access | % of households with electricity access (2019 Kenya Population & Housing Census) |
 | 🎓 Schools (Digital Learning) | % of primary schools with DLP devices installed (ICT Authority DigiSchool), plus 29,700 geolocated schools (Giga/UNICEF-ITU) |
 

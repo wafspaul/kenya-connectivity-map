@@ -21,11 +21,18 @@ geo = var_json('KENYA_GEOJSON')
 counts = var_json('SCHOOLS_COUNTS')
 dlp = var_json('DLP_DATA')
 emp = var_json('EMPLOYMENT_DATA')
-ALIAS = {'Elgeyo-Marakwet': 'Elgeyo Marakwet', "Murang'a": 'Muranga', 'Tharaka-Nithi': 'Tharaka Nithi'}
+def norm(s): return re.sub(r'[^a-z]', '', s.lower())
+def disp(n): return n.replace('-', ' ')
 P = sorted([f['properties'] for f in geo['features']], key=lambda p: -p['composite'])
 for i, p in enumerate(P): p['rank'] = i + 1
 def slug(n): return re.sub(r'[^a-z0-9]+', '-', n.lower().replace("'", '')).strip('-')
 for p in P: p['slug'] = slug(p['county'])
+def _by(d):
+    m = {norm(k): v for k, v in d.items()}
+    out = {p['county']: m[norm(p['county'])] for p in P}
+    assert len(out) == 47, 'lookup mismatch'
+    return out
+DLP, EMP = _by(dlp), _by(emp)
 def rank_by(key, skip_flag=False):
     xs = [p for p in P if not (skip_flag and p['speed_flag'])]
     xs.sort(key=lambda p: -p[key])
@@ -49,10 +56,16 @@ table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:15px}th,t
 .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px}.card b{display:block;font-size:24px;color:var(--accent)}.card small{color:var(--dim)}
 ul.plain{list-style:none;columns:2;gap:20px}ul.plain li{margin-bottom:6px}.pn{display:flex;justify-content:space-between;gap:12px;margin-top:28px;font-size:15px}
 footer.site{border-top:1px solid var(--border);padding:22px 16px;text-align:center;color:var(--dim);font-size:14px}footer.site a{margin:0 8px}
-.src{font-size:14px;color:var(--dim)}.post-meta{color:var(--dim);font-size:14px;margin-bottom:20px}@media(max-width:560px){ul.plain{columns:1}}"""
+.src{font-size:14px;color:var(--dim)}.post-meta{color:var(--dim);font-size:14px;margin-bottom:20px}.hero{margin:0 0 22px}.hero img{width:100%;height:auto;aspect-ratio:1200/630;object-fit:cover;border-radius:10px;display:block;background:var(--surface2)}
+.hero figcaption{font-size:13px;color:var(--dim);margin-top:6px}.toc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 18px;margin:0 0 24px;font-size:15px}
+.toc b{display:block;margin-bottom:6px}.toc ol{margin-left:20px}.toc li{margin-bottom:3px}h3{font-size:18px;margin:18px 0 6px}
+.posts{display:grid;gap:18px;margin-top:22px}.pc{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:start}.pc img{width:200px;height:105px;object-fit:cover;border-radius:8px;background:var(--surface2)}
+.pc h2,.pc h3{margin:0 0 4px;font-size:19px}.pc p{margin:0;font-size:15px}.related{margin-top:34px}.related ul{margin-left:20px}
+@media(max-width:560px){ul.plain{columns:1}.pc{grid-template-columns:1fr}.pc img{width:100%;height:auto;aspect-ratio:1200/630}}"""
 
-def page(path, title, desc, body, jsonld=None, og_type='website'):
+def page(path, title, desc, body, jsonld=None, og_type='website', img=None, extra_head=''):
     url = SITE + '/' + path.strip('/') + ('/' if path.strip('/') else '')
+    img = img or SITE + '/social-preview.png'
     ld = ''.join('<script type="application/ld+json">%s</script>\n' % json.dumps(j, ensure_ascii=False) for j in (jsonld or []))
     doc = f"""<!DOCTYPE html>
 <html lang="en">
@@ -69,10 +82,11 @@ def page(path, title, desc, body, jsonld=None, og_type='website'):
 <meta property="og:url" content="{url}">
 <meta property="og:site_name" content="Kenya Connectivity Map">
 <meta property="og:locale" content="en_KE">
-<meta property="og:image" content="{SITE}/social-preview.png">
+<meta property="og:image" content="{img}">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="{SITE}/social-preview.png">
+<meta name="twitter:image" content="{img}">
 <meta name="theme-color" content="#080d18">
+{extra_head}
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 {ld}<style>{CSS}</style>
@@ -100,36 +114,36 @@ urls = []  # (url, lastmod, priority)
 
 # ---------- county pages ----------
 def county_page(i, p):
-    c = p['county']; s = p['slug']
-    sc = counts.get(c, [0, 0, 0]); tot_sch = sum(sc)
-    d = dlp.get(ALIAS.get(c, c)); e = emp.get(ALIAS.get(c, c))
+    c = disp(p['county']); s = p['slug']; ck = p['county']
+    sc = counts.get(ck, [0, 0, 0]); tot_sch = sum(sc)
+    d = DLP[ck]; e = EMP[ck]
     para1 = (f"{c} ranks {ordinal(p['rank'])} of 47 counties on my composite connectivity score, at {p['composite']:.1f} out of 100. "
              f"That puts it in the {TIER_TXT[p['tier']]} tier.")
     cmp_i = 'above' if p['internet_ind'] >= NAT_INT else 'below'
     para2 = (f"{p['internet_ind']:.1f}% of people in {c} use the internet. The national figure on this map is {NAT_INT:.0f}%, so the county sits {cmp_i} it, "
-             f"in {ordinal(R_INT[c])} place nationally. Electricity access is {p['elec_pct']:.1f}% against a national {NAT_ELEC}%, which ranks {ordinal(R_ELEC[c])}.")
+             f"in {ordinal(R_INT[ck])} place nationally. Electricity access is {p['elec_pct']:.1f}% against a national {NAT_ELEC}%, which ranks {ordinal(R_ELEC[ck])}.")
     if p['speed_flag']:
         spd = (f"I flag the speed figure for {c}. A handful of Starlink users can pull a county average up, so I leave {c} out of the speed ranking and read its tower density instead.")
     else:
-        spd = (f"Average mobile download speed is {p['speed_dl']:.1f} Mbps, {ordinal(R_SPD[c])} of the 46 counties with an unflagged speed figure. "
-               f"Tower density is {p['towers_density']:,.1f} per 100 km², which ranks {ordinal(R_TOW[c])}.")
+        spd = (f"Average mobile download speed is {p['speed_dl']:.1f} Mbps, {ordinal(R_SPD[ck])} of the 46 counties with an unflagged speed figure. "
+               f"Tower density is {p['towers_density']:,.1f} per 100 km², which ranks {ordinal(R_TOW[ck])}.")
     rows = [("Composite score", f"{p['composite']:.1f} / 100", f"{ordinal(p['rank'])} of 47", "Weighted blend of the four layers below"),
-            ("Internet usage", f"{p['internet_ind']:.1f}%", f"{ordinal(R_INT[c])} of 47", "KNBS / 2022 KDHS"),
-            ("Electricity access", f"{p['elec_pct']:.1f}%", f"{ordinal(R_ELEC[c])} of 47", "2019 Population and Housing Census"),
-            ("Cell towers per 100 km²", f"{p['towers_density']:,.1f}", f"{ordinal(R_TOW[c])} of 47", "OpenCelliD, Mar 2026"),
-            ("Average download speed", "Flagged" if p['speed_flag'] else f"{p['speed_dl']:.1f} Mbps", "n/a" if p['speed_flag'] else f"{ordinal(R_SPD[c])} of 46", "Ookla Speedtest Intelligence, Q1 2026")]
+            ("Internet usage", f"{p['internet_ind']:.1f}%", f"{ordinal(R_INT[ck])} of 47", "KNBS / 2022 KDHS"),
+            ("Electricity access", f"{p['elec_pct']:.1f}%", f"{ordinal(R_ELEC[ck])} of 47", "2019 Population and Housing Census"),
+            ("Cell towers per 100 km²", f"{p['towers_density']:,.1f}", f"{ordinal(R_TOW[ck])} of 47", "OpenCelliD, Mar 2026"),
+            ("Average download speed", "Flagged" if p['speed_flag'] else f"{p['speed_dl']:.1f} Mbps", "n/a" if p['speed_flag'] else f"{ordinal(R_SPD[ck])} of 46", "Ookla Speedtest Intelligence, Q1 2026")]
     trs = ''.join(f"<tr><td>{esc(a)}</td><td><strong>{esc(b)}</strong></td><td>{esc(r)}</td><td class='src'>{esc(sr)}</td></tr>" for a, b, r, sr in rows)
     extra = ''
     if tot_sch:
         extra += f"<h2>Schools</h2><p>The Giga school location data lists {tot_sch:,} schools in {c}: {sc[0]:,} primary, {sc[1]:,} secondary and {sc[2]:,} other.</p>"
         if d:
-            extra += f"<p>The ICT Authority DigiSchool dashboard shows {d['installed']:,} of {d['total']:,} schools with Digital Learning Programme devices installed ({d['pct']:.1f}%).</p>"
+            extra += f"<p>The ICT Authority DigiSchool dashboard shows {d['installed']:,} of {d['total']:,} schools with Digital Literacy Programme devices installed ({d['pct']:.1f}%).</p>"
     if e:
         extra += f"<h2>Employment</h2><p>The census lists a labour force participation rate of {e['lfpr']:.1f}% and an unemployment rate of {e['rate']:.1f}% in {c}.</p>"
     prev_p = P[i - 1] if i else None; next_p = P[i + 1] if i < 46 else None
-    pn = '<div class="pn"><span>' + (f'<a href="/counties/{prev_p["slug"]}/">&larr; {esc(prev_p["county"])}</a>' if prev_p else '') + '</span><span>' + (f'<a href="/counties/{next_p["slug"]}/">{esc(next_p["county"])} &rarr;</a>' if next_p else '') + '</span></div>'
+    pn = '<div class="pn"><span>' + (f'<a href="/counties/{prev_p["slug"]}/">&larr; {esc(disp(prev_p["county"]))}</a>' if prev_p else '') + '</span><span>' + (f'<a href="/counties/{next_p["slug"]}/">{esc(disp(next_p["county"]))} &rarr;</a>' if next_p else '') + '</span></div>'
     body = f"""<p class="crumbs"><a href="/">Map</a> / <a href="/counties/">Counties</a> / {esc(c)}</p>
-<h1>{esc(c)} County: internet and electricity coverage</h1>
+<h1>{esc(c)} County internet and electricity coverage</h1>
 <p class="lede">{esc(para1)}</p>
 <a class="cta" href="/#county={s}">Open {esc(c)} on the map</a>
 <div class="cards"><div class="card"><b>{p['composite']:.0f}</b><small>Composite score</small></div><div class="card"><b>{p['internet_ind']:.1f}%</b><small>Use the internet</small></div><div class="card"><b>{p['elec_pct']:.1f}%</b><small>Electricity access</small></div><div class="card"><b>{ordinal(p['rank'])}</b><small>Of 47 counties</small></div></div>
@@ -149,7 +163,7 @@ alpha = sorted(P, key=lambda p: p['county'])
 for i, p in enumerate(P): county_page(i, p)
 
 # counties index
-rows = ''.join(f"<tr><td><a href='/counties/{p['slug']}/'>{esc(p['county'])}</a></td><td>{p['composite']:.1f}</td><td>{p['tier']}</td><td>{p['internet_ind']:.1f}%</td><td>{p['elec_pct']:.1f}%</td></tr>" for p in P)
+rows = ''.join(f"<tr><td><a href='/counties/{p['slug']}/'>{esc(disp(p['county']))}</a></td><td>{p['composite']:.1f}</td><td>{p['tier']}</td><td>{p['internet_ind']:.1f}%</td><td>{p['elec_pct']:.1f}%</td></tr>" for p in P)
 body = f"""<p class="crumbs"><a href="/">Map</a> / Counties</p>
 <h1>Internet and electricity coverage in all 47 Kenyan counties</h1>
 <p class="lede">Here is the full county ranking behind the map, sorted by composite score. Click a county for its page, or open the interactive map to compare layers.</p>
@@ -193,23 +207,85 @@ urls.append((page('data', 'Kenya County Connectivity Data & Sources (CSV)', 'Dow
 
 # ---------- blog ----------
 import blog_posts  # noqa: E402  (tools/blog_posts.py)
-posts = blog_posts.build(P, R_INT, R_ELEC)
-brows = ''
+posts = blog_posts.build(dict(P=P, ordinal=ordinal, disp=disp, D=DLP, E=EMP, R_INT=R_INT, R_ELEC=R_ELEC, counts=counts))
+MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+def nice(d): y, m, dd = d.split('-'); return f"{int(dd)} {MONTHS[int(m) - 1]} {y}"
+def photo(po, w, h):
+    return f"https://images.unsplash.com/photo-{blog_posts.IMAGES[po['img']]['id']}?auto=format&fit=crop&w={w}&h={h}&q=70"
+FALLBACK = 'nairobi_day'
 for po in posts:
+    if not po['img']: po['img'] = FALLBACK
+RSS_LINK = f'<link rel="alternate" type="application/rss+xml" title="Kenya Connectivity Map blog" href="{SITE}/blog/feed.xml">'
+brows = ''
+for n, po in enumerate(posts):
+    im = blog_posts.IMAGES[po['img']]
+    words = len(re.sub(r'<[^>]+>', ' ', po['html']).split())
+    mins = max(2, round(words / 220))
+    html_ = po['html']
+    heads = re.findall(r'<h2>(.*?)</h2>', html_)
+    for h in heads:
+        html_ = html_.replace(f'<h2>{h}</h2>', f'<h2 id="{slug(re.sub(r"<[^>]+>", "", h))}">{h}</h2>', 1)
+    toc_items = [(slug(re.sub(r'<[^>]+>', '', h)), re.sub(r'<[^>]+>', '', h)) for h in heads] + [('faq', 'Frequently asked questions')]
+    toc = '<nav class="toc" aria-label="Contents"><b>In this post</b><ol>' + ''.join(f'<li><a href="#{a}">{esc(b)}</a></li>' for a, b in toc_items) + '</ol></nav>' if len(heads) >= 4 else ''
+    faq_html = '<h2 id="faq">Frequently asked questions</h2>' + ''.join(f'<h3>{esc(q)}</h3><p>{esc(a)}</p>' for q, a in po['faq'])
+    rel = [posts[(n + k) % len(posts)] for k in (1, 2, 3)]
+    rel_html = '<div class="related"><h2>Keep reading</h2><ul>' + ''.join(f"<li><a href='/blog/{r['slug']}/'>{esc(r['title'])}</a></li>" for r in rel) + '</ul></div>'
+    hero = f"""<figure class="hero"><img src="{photo(po, 1200, 630)}" width="1200" height="630" alt="{esc(im['alt'])}" fetchpriority="high" decoding="async"><figcaption>Photo by <a href="https://unsplash.com/@{im['user']}{blog_posts.UTM}" rel="noopener">{esc(im['name'])}</a> on <a href="https://unsplash.com/{blog_posts.UTM}" rel="noopener">Unsplash</a></figcaption></figure>"""
     body = f"""<p class="crumbs"><a href="/">Map</a> / <a href="/blog/">Blog</a></p>
 <h1>{esc(po['title'])}</h1>
-<p class="post-meta">By Paul Wamocha · {po['date']}</p>
-{po['html']}
+<p class="post-meta">By <a href="https://paulwamocha.work">Paul Wamocha</a> · {nice(po['date'])} · {mins} min read</p>
+{hero}
+{toc}
+{html_}
+{faq_html}
 <h2>Explore the data</h2>
-<p><a class="cta" href="/">Open the interactive map</a> or browse <a href="/counties/">all 47 counties</a>. County data is on the <a href="/data/">data page</a>.</p>"""
+<p><a class="cta" href="/">Open the interactive map</a> or browse <a href="/counties/">all 47 counties</a>. County data is on the <a href="/data/">data page</a>.</p>
+{rel_html}"""
     art = {"@context": "https://schema.org", "@type": "Article", "headline": po['title'], "description": po['desc'], "datePublished": po['date'], "dateModified": po['date'],
-           "author": {"@type": "Person", "name": "Paul Wamocha", "url": "https://paulwamocha.work"}, "image": SITE + "/social-preview.png",
-           "mainEntityOfPage": f"{SITE}/blog/{po['slug']}/", "publisher": {"@type": "Person", "name": "Paul Wamocha"}}
-    u = page(f"blog/{po['slug']}", po['title'] + ' | Kenya Connectivity Map', po['desc'], body, [art, crumbs([("Map", SITE + "/"), ("Blog", SITE + "/blog/"), (po['title'], f"{SITE}/blog/{po['slug']}/")])], 'article')
+           "author": {"@type": "Person", "name": "Paul Wamocha", "url": "https://paulwamocha.work"}, "image": [photo(po, 1200, 630)],
+           "wordCount": words, "mainEntityOfPage": f"{SITE}/blog/{po['slug']}/", "publisher": {"@type": "Person", "name": "Paul Wamocha"}}
+    faq_ld = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in po['faq']]}
+    u = page(f"blog/{po['slug']}", po['title'] + ' | Kenya Connectivity Map', po['desc'], body,
+             [art, faq_ld, crumbs([("Map", SITE + "/"), ("Blog", SITE + "/blog/"), (po['title'], f"{SITE}/blog/{po['slug']}/")])], 'article', photo(po, 1200, 630), RSS_LINK)
     urls.append((u, po['date'], '0.8'))
-    brows += f"<h2 style='margin-top:26px'><a href='/blog/{po['slug']}/'>{esc(po['title'])}</a></h2><p class='post-meta'>{po['date']}</p><p>{esc(po['desc'])}</p>"
-urls.append((page('blog', 'Kenya Connectivity Blog | Data Notes on Internet & Electricity', 'Data notes on internet and electricity access across Kenya\'s 47 counties, from the builder of the Kenya Connectivity Map.',
-    f"<h1>Kenya connectivity blog</h1><p class='lede'>Notes on what the county data says about internet and electricity access in Kenya.</p>{brows}", [crumbs([("Map", SITE + "/"), ("Blog", SITE + "/blog/")])]), TODAY, '0.7'))
+    brows += f"""<article class="pc"><a href="/blog/{po['slug']}/"><img src="{photo(po, 400, 210)}" width="400" height="210" alt="{esc(im['alt'])}" loading="lazy" decoding="async"></a><div><h2><a href="/blog/{po['slug']}/">{esc(po['title'])}</a></h2><p class="post-meta" style="margin:2px 0 6px">{nice(po['date'])} · {mins} min read</p><p>{esc(po['desc'])}</p></div></article>"""
+urls.append((page('blog', 'Kenya Connectivity Blog | Data Notes on Internet & Electricity', "Data notes on internet, electricity, towers, speed and schools across Kenya's 47 counties, from the builder of the Kenya Connectivity Map.",
+    f"<h1>Kenya connectivity blog</h1><p class='lede'>Notes on what the county data says about internet and electricity access in Kenya. <a href='/blog/feed.xml'>RSS feed</a>.</p><div class='posts'>{brows}</div>",
+    [crumbs([("Map", SITE + "/"), ("Blog", SITE + "/blog/")])], extra_head=RSS_LINK), TODAY, '0.7'))
+
+# RSS feed
+import email.utils
+def rfc(d): return email.utils.format_datetime(datetime.datetime.strptime(d, '%Y-%m-%d').replace(hour=8, tzinfo=datetime.timezone.utc))
+items = ''.join(f"<item><title>{esc(po['title'])}</title><link>{SITE}/blog/{po['slug']}/</link><guid>{SITE}/blog/{po['slug']}/</guid><pubDate>{rfc(po['date'])}</pubDate><description>{esc(po['desc'])}</description></item>" for po in posts)
+open(os.path.join(ROOT, 'blog', 'feed.xml'), 'w', encoding='utf-8', newline='\n').write(
+    f'<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel><title>Kenya Connectivity Map blog</title><link>{SITE}/blog/</link>'
+    f'<description>Data notes on internet and electricity access across Kenya\'s 47 counties.</description><language>en-KE</language>{items}</channel></rss>\n')
+
+# ---------- lint: no dashes, no banned words ----------
+BANNED = ['delve', 'pivotal', 'nuanced', 'robust', 'leverage', 'unlock', 'crucial', 'critical', 'transformative', 'ecosystem', 'synergy', 'seamless', 'groundbreaking',
+          'underscore', 'tapestry', 'bolster', 'garner', 'foster', 'vibrant', 'meticulous', 'enduring', 'showcase', 'highlight', 'interplay', 'intricate', 'landscape', 'testament', 'align',
+          'genuinely', 'honestly', 'straightforward']
+bad = []
+for root_, _, fs in os.walk(os.path.join(ROOT, 'blog')):
+    for fn in fs:
+        if not fn.endswith('.html'): continue
+        raw = open(os.path.join(root_, fn), encoding='utf-8').read()
+        ld_txt = ' '.join(re.findall(r'<script type="application/ld\+json">(.*?)</script>', raw, re.S))
+        ld_txt = re.sub(r'https?://[^"\s]+', '', ld_txt)
+        t = re.sub(r'<(script|style)[^>]*>.*?</\1>', '', raw, flags=re.S)
+        t = re.sub(r'<[^>]+>', ' ', t)
+        t = html.unescape(t) + ' ' + re.sub(r'\d{4}-\d{2}-\d{2}', '', ld_txt)
+        t = re.sub(r'https?://\S+', '', t)
+        for m in re.finditer(r'[—–‒―]|(?<=\w)-(?=\w)|\s-\s', t):
+            bad.append((fn, root_[-40:], 'dash', t[max(0, m.start() - 25):m.end() + 25].replace('\n', ' ')))
+        for w in BANNED:
+            for m in re.finditer(r'\b' + w, t, re.I):
+                bad.append((fn, root_[-40:], 'banned ' + w, t[max(0, m.start() - 25):m.end() + 25].replace('\n', ' ')))
+        h1 = re.search(r'<h1>(.*?)</h1>', raw)
+        if h1 and ':' in h1.group(1): bad.append((fn, root_[-40:], 'colon h1', h1.group(1)))
+for b in bad: print('LINT', b)
+print('lint issues:', len(bad))
+
 
 # ---------- sitemap ----------
 sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
