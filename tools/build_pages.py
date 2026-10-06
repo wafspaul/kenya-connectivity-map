@@ -59,11 +59,12 @@ footer.site{border-top:1px solid var(--border);padding:22px 16px;text-align:cent
 .src{font-size:14px;color:var(--dim)}.post-meta{color:var(--dim);font-size:14px;margin-bottom:20px}.hero{margin:0 0 22px}.hero img{width:100%;height:auto;aspect-ratio:1200/630;object-fit:cover;border-radius:10px;display:block;background:var(--surface2)}
 .hero figcaption{font-size:13px;color:var(--dim);margin-top:6px}.toc{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 18px;margin:0 0 24px;font-size:15px}
 .toc b{display:block;margin-bottom:6px}.toc ol{margin-left:20px}.toc li{margin-bottom:3px}h3{font-size:18px;margin:18px 0 6px}
-.posts{display:grid;gap:18px;margin-top:22px}.pc{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:start}.pc img{width:200px;height:105px;object-fit:cover;border-radius:8px;background:var(--surface2)}
-.pc h2,.pc h3{margin:0 0 4px;font-size:19px}.pc p{margin:0;font-size:15px}.related{margin-top:34px}.related ul{margin-left:20px}
-@media(max-width:560px){ul.plain{columns:1}.pc{grid-template-columns:1fr}.pc img{width:100%;height:auto;aspect-ratio:1200/630}}"""
+.posts{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:22px}.pc{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.pc>a{display:block}.pc img{width:100%;height:auto;aspect-ratio:1200/630;object-fit:cover;display:block;background:var(--surface2)}.pc .pb{padding:14px 16px 16px}
+.pc h2{margin:0 0 4px;font-size:18px;line-height:1.3}.pc h2 a{text-decoration:none}.pc p{margin:0;font-size:15px}.pc .post-meta{margin:2px 0 8px}main.wide{max-width:1080px}.related{margin-top:34px}.related ul{margin-left:20px}
+@media(max-width:900px){.posts{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){ul.plain{columns:1}.posts{grid-template-columns:1fr}}"""
 
-def page(path, title, desc, body, jsonld=None, og_type='website', img=None, extra_head=''):
+def page(path, title, desc, body, jsonld=None, og_type='website', img=None, extra_head='', wide=False):
     url = SITE + '/' + path.strip('/') + ('/' if path.strip('/') else '')
     img = img or SITE + '/social-preview.png'
     ld = ''.join('<script type="application/ld+json">%s</script>\n' % json.dumps(j, ensure_ascii=False) for j in (jsonld or []))
@@ -94,7 +95,7 @@ def page(path, title, desc, body, jsonld=None, og_type='website', img=None, extr
 <body>
 <header class="site"><a class="brand" href="/">Kenya <span>Connectivity</span> Map</a>
 <nav><a href="/">Map</a><a href="/counties/">Counties</a><a href="/blog/">Blog</a><a href="/data/">Data</a></nav></header>
-<main>
+<main{' class="wide"' if wide else ''}>
 {body}
 </main>
 <footer class="site"><a href="/">Interactive map</a><a href="/counties/">All 47 counties</a><a href="/blog/">Blog</a><a href="/data/">Data and sources</a><p style="margin-top:10px">Built by <a href="https://paulwamocha.work">Paul Wamocha</a></p></footer>
@@ -248,10 +249,10 @@ for n, po in enumerate(posts):
     u = page(f"blog/{po['slug']}", po['title'] + ' | Kenya Connectivity Map', po['desc'], body,
              [art, faq_ld, crumbs([("Map", SITE + "/"), ("Blog", SITE + "/blog/"), (po['title'], f"{SITE}/blog/{po['slug']}/")])], 'article', photo(po, 1200, 630), RSS_LINK)
     urls.append((u, po['date'], '0.8'))
-    brows += f"""<article class="pc"><a href="/blog/{po['slug']}/"><img src="{photo(po, 400, 210)}" width="400" height="210" alt="{esc(im['alt'])}" loading="lazy" decoding="async"></a><div><h2><a href="/blog/{po['slug']}/">{esc(po['title'])}</a></h2><p class="post-meta" style="margin:2px 0 6px">{nice(po['date'])} · {mins} min read</p><p>{esc(po['desc'])}</p></div></article>"""
+    brows += f"""<article class="pc"><a href="/blog/{po['slug']}/"><img src="{photo(po, 600, 315)}" width="600" height="315" alt="{esc(im['alt'])}" loading="lazy" decoding="async"></a><div class="pb"><h2><a href="/blog/{po['slug']}/">{esc(po['title'])}</a></h2><p class="post-meta">{nice(po['date'])} · {mins} min read</p><p>{esc(po['desc'])}</p></div></article>"""
 urls.append((page('blog', 'Kenya Connectivity Blog | Data Notes on Internet & Electricity', "Data notes on internet, electricity, towers, speed and schools across Kenya's 47 counties, from the builder of the Kenya Connectivity Map.",
     f"<h1>Kenya connectivity blog</h1><p class='lede'>Notes on what the county data says about internet and electricity access in Kenya. <a href='/blog/feed.xml'>RSS feed</a>.</p><div class='posts'>{brows}</div>",
-    [crumbs([("Map", SITE + "/"), ("Blog", SITE + "/blog/")])], extra_head=RSS_LINK), TODAY, '0.7'))
+    [crumbs([("Map", SITE + "/"), ("Blog", SITE + "/blog/")])], extra_head=RSS_LINK, wide=True), TODAY, '0.7'))
 
 # RSS feed
 import email.utils
