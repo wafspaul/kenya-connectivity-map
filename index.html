@@ -777,7 +777,7 @@ const LAYERS = {
     format: v => v===undefined||v===null?'N/A':v.toFixed(1)+'%', natAvg:38.7,
   },
   schools:{
-    label:'Digital Learning (DLP)',
+    label:'Digital Literacy (DLP)',
     getValue: p => { const d = dlpFor(p.county || p.adm1_name); return d ? d.pct : undefined; },
     getColor: v => v===undefined||v===null?'#1e2d45':v>=99?'#10b981':v>=95?'#6ee7b7':v>=85?'#f59e0b':v>=70?'#f97316':'#ef4444',
     legendItems:[{color:'#10b981',label:'≥99% devices installed'},{color:'#6ee7b7',label:'95–98.9%'},{color:'#f59e0b',label:'85–94.9%'},{color:'#f97316',label:'70–84.9%'},{color:'#ef4444',label:'<70%'}],
@@ -983,7 +983,7 @@ function buildCountyHTML(name, p){
       </div>
     </div>
     <div class="panel-section" data-section="schools">
-      <div class="section-title">🎓 Digital Learning (DLP)</div>
+      <div class="section-title">🎓 Digital Literacy (DLP)</div>
       <div class="metric-row"><span class="metric-label">Devices installed</span><span class="metric-val">${_dlp ? _dlp.pct.toFixed(1)+'%' : 'N/A'}</span></div>
       ${_dlp ? cmpBar(_dlp.pct, 98.7, 100, '#7dd3fc') : ''}
       ${_dlp ? `<div class="metric-row"><span class="metric-label">Schools with devices</span><span class="metric-val">${_dlp.installed.toLocaleString()} / ${_dlp.total.toLocaleString()}</span></div>` : ''}

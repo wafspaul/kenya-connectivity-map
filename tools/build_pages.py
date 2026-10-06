@@ -141,6 +141,13 @@ def county_page(i, p):
             extra += f"<p>The ICT Authority DigiSchool dashboard shows {d['installed']:,} of {d['total']:,} schools with Digital Literacy Programme devices installed ({d['pct']:.1f}%).</p>"
     if e:
         extra += f"<h2>Employment</h2><p>The census lists a labour force participation rate of {e['lfpr']:.1f}% and an unemployment rate of {e['rate']:.1f}% in {c}.</p>"
+    rel = []
+    if ck == 'Lamu': rel.append(('lamu-county-connectivity-and-the-lamu-refinery', 'What the data says about Lamu as the refinery breaks ground'))
+    if ck in ('Kilifi', 'Kwale'): rel.append(('kilifi-and-kwale-substations-and-electricity-access', 'Two new Coast substations and electricity access in Kilifi and Kwale'))
+    if p['towers_density'] < 2: rel.append(('satellite-to-phone-service-and-kenyas-sparse-counties', 'Satellite to phone service and the counties towers miss'))
+    if p['tier'] == 'Critical': rel.append(('kenya-fibre-tender-and-the-least-connected-counties', 'The fibre tender and the least connected counties'))
+    rel += [('internet-usage-in-kenya-by-county', 'Internet use in Kenya by county'), ('electricity-access-by-county-in-kenya', 'Electricity access by county in Kenya'), ('counties-with-power-but-little-internet', 'Counties with power but little internet')]
+    extra += '<h2>Related reading</h2><ul>' + ''.join(f'<li><a href="/blog/{sl}/">{esc(tt)}</a></li>' for sl, tt in rel[:4]) + '</ul>'
     prev_p = P[i - 1] if i else None; next_p = P[i + 1] if i < 46 else None
     pn = '<div class="pn"><span>' + (f'<a href="/counties/{prev_p["slug"]}/">&larr; {esc(disp(prev_p["county"]))}</a>' if prev_p else '') + '</span><span>' + (f'<a href="/counties/{next_p["slug"]}/">{esc(disp(next_p["county"]))} &rarr;</a>' if next_p else '') + '</span></div>'
     body = f"""<p class="crumbs"><a href="/">Map</a> / <a href="/counties/">Counties</a> / {esc(c)}</p>
