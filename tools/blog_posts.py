@@ -14,6 +14,10 @@ IMAGES = {
     'phone': dict(id='1697383904932-94304530a3dd', name='Hassan Kibwana', user='kb_photographic', alt='Woman in Nairobi smiling while holding a mobile phone'),
     'student': dict(id='1771412205065-6e8c5ec159bd', name='Mudadi Saidi', user='mudadisaidi', alt='Young ICT student holding a laptop'),
     'pylons': dict(id='1610028290816-5d937a395a49', name='Andrey Metelev', user='metelevan', alt='Electricity pylons silhouetted against a sunset'),
+    'lamu': dict(id='1558907530-b6ac430f8a8c', name='Photos By Beks', user='photosbybeks', alt='Wooden boat resting on a shoreline in Kenya'),
+    'fibre': dict(id='1594915440248-1e419eba6611', name='Kirill Sh', user='kirill2020', alt='Fibre optic cables plugged into a network switch in a server rack'),
+    'substation': dict(id='1509390144018-eeaf65052242', name='American Public Power Association', user='publicpowerorg', alt='Large electrical transformer in a power substation'),
+    'dish': dict(id='1745697213293-21d6c972ac1a', name='Bernd Dittrich', user='hdbernd', alt='Large satellite dish against a blue sky'),
 }
 NUM = {1: 'One', 2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five', 6: 'Six', 7: 'Seven', 8: 'Eight', 9: 'Nine', 10: 'Ten'}
 
@@ -249,5 +253,122 @@ def build(c):
 {table(['County', 'Unemployment rate', 'Labour force participation', 'Connectivity rank'], rows)}
 {src_note('Source: 2019 Kenya Population and Housing Census, Volume IV, Table 2.8a (KNBS). Connectivity rank is out of 47 on my composite score.')}
 <p>The census is from 2019, so these figures predate recent changes in the job market. I will update the layer when KNBS publishes newer county data. Open the <a href="/#county=garissa">employment layer on the map</a> to see the counties side by side.</p>"""))
+
+    # ------------------------------------------------------------ 9 Lamu and the refinery
+    lam = by['Lamu']
+    R_TOW_L = sorted(P, key=lambda p: -p['towers_density']).index(lam) + 1
+    medt2 = st.median(p['towers_density'] for p in P)
+    lam_sch = sum(c['counts']['Lamu'])
+    assert lam['rank'] == 36 and lam['tier'] == 'Low' and R_ELEC['Lamu'] == 12 and R_INT['Lamu'] == 27
+    posts.append(dict(
+        slug='lamu-county-connectivity-and-the-lamu-refinery', date=DATE, img='lamu',
+        title='What the connectivity data says about Lamu as the refinery breaks ground',
+        desc=f"Lamu ranks {ordn(lam['rank'])} of 47 on connectivity, with {lam['elec_pct']:.1f}% electricity access but only {lam['towers_density']:.1f} cell towers per 100 km². The county data behind the refinery news.",
+        faq=[("How connected is Lamu County?", f"Lamu ranks {ordn(lam['rank'])} of 47 counties on my composite score at {lam['composite']:.1f} out of 100, in the Low tier. Electricity access is {lam['elec_pct']:.1f}% and internet use is {lam['internet_ind']:.1f}%."),
+             ("Where is the Lamu refinery being built?", "Business Daily reported that Aliko Dangote broke ground on the refinery in Lamu on 30 September 2026. The articles I could read in full do not name the exact site, so I do not map it.")],
+        html=f"""<p>Business Daily reported that Aliko Dangote broke ground on a Sh2 trillion refinery in Lamu on 30 September 2026. A companion report puts the cost at Sh2.1 trillion, a capacity of 700,000 barrels a day and about 60,000 jobs. I read what I could of both pieces, and the exact site, timeline and infrastructure plans sit behind a paywall. So I will not guess at them. What I can do is show you the county the project lands in. The headline sources are <a href="https://www.businessdailyafrica.com/bd/corporate/boss-talk/dangote-breaks-ground-on-sh2trn-lamu-refinery-5616362" rel="noopener">the report on the ceremony</a> and <a href="https://www.businessdailyafrica.com/bd/corporate/industry/early-winners-as-lamu-refinery-project-kicks-off-5615178" rel="noopener">the early winners piece</a>.</p>
+<h2>Where Lamu sits today</h2>
+<p>{L('Lamu')} ranks {ordn(lam['rank'])} of 47 counties on my composite score, at {lam['composite']:.1f} out of 100. That puts it in the Low tier. Its {lam['area_sqkm']:,.0f} km² hold {lam_sch:,} schools in the Giga data.</p>
+<h2>Power is the strong layer</h2>
+<p>{lam['elec_pct']:.1f}% of Lamu households have electricity in the 2019 census data. That ranks {ordn(R_ELEC['Lamu'])} of 47 and sits well above the national figure of 38.7%. Of the layers I map, this is where Lamu does best.</p>
+<h2>Towers and internet use lag behind</h2>
+<p>Tower density is {lam['towers_density']:.1f} per 100 km², which ranks {ordn(R_TOW_L)} of 47. The median county has {medt2:.0f}. Internet use is {lam['internet_ind']:.1f}%, in {ordn(R_INT['Lamu'])} place and below the 35% national figure. A county with this much power and this little coverage has a mismatch worth looking at first.</p>
+<h2>A speed figure to read with care</h2>
+<p>Lamu averages {lam['speed_dl']:.1f} Mbps on mobile, but only {lam['speed_tests']:,} speed tests sit behind that number. {by['Nairobi']['speed_tests']:,} tests sit behind the Nairobi figure. I treat a figure built on {lam['speed_tests']:,} tests as a hint, not a measurement.</p>
+<h2>What I would watch next</h2>
+<p>A refinery brings contractors, workers and suppliers who all need reliable mobile and fibre links. The question for planners is whether coverage grows at the pace the construction does. I will update this page when the project publishes site plans or utility requirements. Until then the county numbers are the baseline to measure against.</p>
+{table(['Measure', 'Lamu', 'Rank of 47'], [('Composite score', f"{lam['composite']:.1f}", ordn(lam['rank'])), ('Electricity access', f"{lam['elec_pct']:.1f}%", ordn(R_ELEC['Lamu'])), ('Internet use', f"{lam['internet_ind']:.1f}%", ordn(R_INT['Lamu'])), ('Cell towers per 100 km²', f"{lam['towers_density']:.1f}", ordn(R_TOW_L)), ('Unemployment rate (2019)', f"{E['Lamu']['rate']:.1f}%", ordn(sorted(E, key=lambda k: -E[k]['rate']).index('Lamu') + 1))])}
+<p>For the full county view, open the <a href="/counties/lamu/">Lamu county page</a> or read <a href="/blog/cell-tower-density-in-kenya-by-county/">tower density across all 47 counties</a>."""))
+
+    # ------------------------------------------------------------ 10 fibre tender
+    low8 = [p for p in P if p['tier'] == 'Critical']
+    low8.sort(key=lambda p: p['composite'])
+    assert len(low8) == 8 and max(p['internet_ind'] for p in low8) < 35
+    rows = [(L(p['county']), f"{p['composite']:.1f}", f"{p['internet_ind']:.1f}%", f"{p['towers_density']:.1f}", f"{p['area_sqkm']:,.0f}") for p in low8]
+    posts.append(dict(
+        slug='kenya-fibre-tender-and-the-least-connected-counties', date=DATE, img='fibre',
+        title='Kenya opens a $390 million fibre tender. Which counties need it most?',
+        desc=f"ICTA opened a World Bank funded fibre tender with bids closing 29 October 2026. Here are the {len(low8)} counties at the bottom of my connectivity ranking, to check against the routes.",
+        faq=[("What is the ICTA fibre tender?", "ICTA opened an international tender on 16 September 2026 under the Kenya Digital Economy Acceleration Project. The World Bank is financing it with USD 390 million in credits. Lot 1 covers national backbone links and Lot 2 covers cross border and metro links."),
+             ("When do bids close?", "Bids close on 29 October 2026 at 10:00 a.m. East African Time at Telposta Towers in Nairobi, according to TechAfrica News.")],
+        html=f"""<p>The Information and Communications Technology Authority opened an international tender on 16 September 2026 to expand the national fibre backbone and cross border links. <a href="https://techafricanews.com/2026/09/16/kenya-icta-tender-national-fibre-cross-border-connectivity/" rel="noopener">TechAfrica News reports</a> that the World Bank is financing it with USD 390 million in credits under the Kenya Digital Economy Acceleration Project. Bids close on 29 October 2026.</p>
+<h2>What the tender covers</h2>
+<p>Lot 1 covers national backbone links, and ICTA plans to appoint between 5 and 20 providers. Lot 2 covers cross border and metro links, with 5 to 8 providers. Winning providers compete for subsidies on designated routes through a reverse auction. Public sector fibre grew from 22,486 km in 2022 to more than 30,400 km today, and the stated target is 100,000 km.</p>
+<h2>What nobody has published yet</h2>
+<p>The route lists for each lot are not public in the sources I have. That means I cannot tell you which counties will get new fibre. I will add the routes to the map when ICTA names winners and publishes them.</p>
+<h2>The counties to check the routes against</h2>
+<p>When the routes appear, the first question is whether they reach the counties at the bottom of the ranking. {len(low8)} counties fall in my lowest tier: {names([L(p['county']) for p in low8])}. Together they cover {sum(p['area_sqkm'] for p in low8):,.0f} km², about {sum(p['area_sqkm'] for p in low8)/sum(p['area_sqkm'] for p in P)*100:.0f}% of the country. Not one of them reaches the 35% national internet use figure. {L('Turkana')} sits last at {tur['composite']:.1f}.</p>
+{table(['County', 'Composite', 'Internet use', 'Towers per 100 km²', 'Area (km²)'], rows)}
+<h2>Why backbone fibre is only half the answer</h2>
+<p>Backbone fibre feeds towers. A county with 0.4 towers per 100 km² needs more of them as well as the cable. It also needs power to run them, and {L('Turkana')}, {L('Wajir')} and {L('Mandera')} all sit below 20% electricity access. The <a href="/blog/electricity-access-by-county-in-kenya/">electricity post</a> covers that side.</p>
+<p>I will update this post when ICTA names the winners. The county ranking is on the <a href="/blog/most-and-least-connected-counties-in-kenya/">most and least connected counties</a> page."""))
+
+    # ------------------------------------------------------------ 11 coast substations
+    kil, kwa, mom = by['Kilifi'], by['Kwale'], by['Mombasa']
+    assert kil['elec_pct'] < 38.7 and kwa['elec_pct'] < 38.7
+    posts.append(dict(
+        slug='kilifi-and-kwale-substations-and-electricity-access', date=DATE, img='substation',
+        title='Two new Coast substations, and what Kilifi and Kwale electricity access looks like',
+        desc=f"Kenya Power is building Sh765 million of substations in Kilifi and Kwale. Electricity access is {kil['elec_pct']:.1f}% in Kilifi and {kwa['elec_pct']:.1f}% in Kwale, against {mom['elec_pct']:.1f}% in Mombasa.",
+        faq=[("What substations is Kenya Power building at the Coast?", "A Sh455 million 132/33kV substation at Bomani in Kilifi County and a Sh310 million 33/11kV substation in Kwale County, together Sh765 million, according to The Star."),
+             ("What is electricity access in Kilifi and Kwale?", f"{kil['elec_pct']:.1f}% in Kilifi and {kwa['elec_pct']:.1f}% in Kwale in the 2019 census data on the map, against a national figure of 38.7%.")],
+        html=f"""<p>Kenya Power is putting Sh765 million into two substations at the Coast, according to <a href="https://www.the-star.co.ke/news/2026-09-07-kplc-invests-sh765m-in-new-coast-substations" rel="noopener">The Star</a>. The company says demand is outrunning existing capacity.</p>
+<h2>The two projects</h2>
+<p>The first is a Sh455 million 132/33kV substation at Bomani in Kilifi. It will serve Kikambala, Vipingo, Kanamai and Mtwapa, areas now fed from the Kilifi and Bamburi substations. The Star says Kenya Power is nearing completion. The second is a Sh310 million 33/11kV substation in Kwale with four feeders. It will serve the county headquarters, Kinango, Tiwi and Kombani, and take pressure off the Diani substation. The article gives no completion dates.</p>
+<h2>What the map shows for the two counties</h2>
+<p>{L('Kilifi')} has {kil['elec_pct']:.1f}% electricity access, which ranks {ordn(R_ELEC['Kilifi'])} of 47. {L('Kwale')} has {kwa['elec_pct']:.1f}% and ranks {ordn(R_ELEC['Kwale'])}. Both sit below the national 38.7%. Next door, {L('Mombasa')} reaches {mom['elec_pct']:.1f}%. The Coast has a gap inside it.</p>
+<h2>Capacity and access are different problems</h2>
+<p>A new substation protects the supply of people who already have a connection. It does not by itself raise the share of households connected. Kenya Power describes these projects as capacity and reliability work, driven by industrial and commercial growth spilling out of Mombasa. That is good news for the businesses in Vipingo and Mtwapa. The households in the rest of both counties need a connection programme too.</p>
+<h2>Connectivity in both counties</h2>
+<p>{L('Kilifi')} ranks {ordn(kil['rank'])} overall at {kil['composite']:.1f}, with {kil['internet_ind']:.1f}% internet use. {L('Kwale')} ranks {ordn(kwa['rank'])} at {kwa['composite']:.1f}, with {kwa['internet_ind']:.1f}% internet use. Kwale posts a mobile average of {kwa['speed_dl']:.1f} Mbps from {kwa['speed_tests']:,} tests, the third fastest on the map. Kilifi averages {kil['speed_dl']:.1f} Mbps.</p>
+{table(['Measure', 'Kilifi', 'Kwale', 'Mombasa'], [('Electricity access', f"{kil['elec_pct']:.1f}%", f"{kwa['elec_pct']:.1f}%", f"{mom['elec_pct']:.1f}%"), ('Internet use', f"{kil['internet_ind']:.1f}%", f"{kwa['internet_ind']:.1f}%", f"{mom['internet_ind']:.1f}%"), ('Cell towers per 100 km²', f"{kil['towers_density']:.1f}", f"{kwa['towers_density']:.1f}", f"{mom['towers_density']:,.0f}"), ('Composite rank', ordn(kil['rank']), ordn(kwa['rank']), ordn(mom['rank']))])}
+{src_note('Electricity access is from the 2019 census. Substation details are from The Star, 7 September 2026.')}
+<p>For the full ranking by power, read <a href="/blog/electricity-access-by-county-in-kenya/">electricity access by county</a>."""))
+
+    # ------------------------------------------------------------ 12 satellite to phone
+    sparse = sorted([p for p in P if p['towers_density'] < 2], key=lambda p: p['towers_density'])
+    assert len(sparse) >= 5
+    rows = [(L(p['county']), f"{p['towers_density']:.1f}", f"{p['area_sqkm']:,.0f}", f"{p['internet_ind']:.1f}%", f"{p['elec_pct']:.1f}%") for p in sparse]
+    posts.append(dict(
+        slug='satellite-to-phone-service-and-kenyas-sparse-counties', date=DATE, img='dish',
+        title='Satellite to phone service could reach the counties towers miss',
+        desc=f"Airtel says its Starlink satellite to phone service is ready, pending approval. {len(sparse)} counties have fewer than two cell towers per 100 km². Here they are.",
+        faq=[("What is Airtel's satellite to phone service?", "Airtel Kenya plans a Starlink Direct to Cell service that connects ordinary 4G and 5G smartphones to satellites outside terrestrial coverage. TechTrendsKE reported on 4 August 2026 that it was ready and waiting for approval from the Communications Authority of Kenya."),
+             ("Which counties have the fewest cell towers per area?", f"{names([disp(p['county']) + ' (' + format(p['towers_density'], '.1f') + ')' for p in sparse[:4]])} towers per 100 km² are the lowest on the map.")],
+        html=f"""<p>Airtel Kenya says its satellite to phone service is ready to launch once the Communications Authority of Kenya approves it. <a href="https://techtrendske.co.ke/2026/08/04/airtel-kenya-satellite-to-phone-service/" rel="noopener">TechTrendsKE reported</a> on 4 August 2026 that the service uses Starlink Direct to Cell satellites, that a pilot has finished, and that no launch date exists. I did not find an approval announcement when I checked.</p>
+<h2>How it would work</h2>
+<p>Compatible 4G and 5G phones would switch to a satellite link when they leave mobile coverage, with no dish or new device. Earlier trials covered messaging and light data, including WhatsApp and Airtel Money. The article describes it as a complement to the mobile network, not a replacement.</p>
+<h2>The counties with the thinnest tower coverage</h2>
+<p>{len(sparse)} counties have fewer than two cell towers per 100 km²: {names([L(p['county']) for p in sparse])}. {L(sparse[0]['county'])} is the thinnest at {sparse[0]['towers_density']:.1f}. These are the places where a phone leaves coverage fastest, and the places a satellite link would matter most.</p>
+{table(['County', 'Towers per 100 km²', 'Area (km²)', 'Internet use', 'Electricity access'], rows)}
+<h2>A phone still needs power</h2>
+<p>Satellite coverage solves the signal and leaves the charger problem. Electricity access in these counties runs from {min(p['elec_pct'] for p in sparse):.1f}% to {max(p['elec_pct'] for p in sparse):.1f}%. A phone that cannot be charged at home will not use a satellite link for long. Mini grids and solar matter as much as the launch.</p>
+<h2>How I will treat it on the map</h2>
+<p>Tower counts will not capture satellite access once it launches. The map will need a separate coverage category once the Communications Authority decides, so it does not call a county unserved when a satellite link covers it. Read <a href="/blog/cell-tower-density-in-kenya-by-county/">tower density across all 47 counties</a> for the baseline."""))
+
+    # ------------------------------------------------------------ 13 power versus internet
+    import statistics as _st
+    corr = _st.correlation([p['elec_pct'] for p in P], [p['internet_ind'] for p in P])
+    pwr = sorted(P, key=lambda p: R_ELEC[p['county']] - R_INT[p['county']])[:5]
+    net = sorted(P, key=lambda p: R_INT[p['county']] - R_ELEC[p['county']])[:5]
+    rows = [(L(p['county']), ordn(R_ELEC[p['county']]), ordn(R_INT[p['county']])) for p in pwr]
+    rows2 = [(L(p['county']), ordn(R_ELEC[p['county']]), ordn(R_INT[p['county']])) for p in net]
+    posts.append(dict(
+        slug='counties-with-power-but-little-internet', date=DATE, img='phone',
+        title='Kenyan counties with power but little internet, and the other way round',
+        desc=f"Electricity and internet use move together across Kenya's counties, with a correlation of {corr:.2f}. These counties break the pattern, from {disp(pwr[0]['county'])} to {disp(net[0]['county'])}.",
+        faq=[("Do counties with more electricity have more internet use?", f"Yes, mostly. Across the 47 counties the correlation between electricity access and internet use is {corr:.2f}, where 1.00 would be a perfect match."),
+             ("Which county has more electricity than internet use would suggest?", f"{disp(pwr[0]['county'])} ranks {ordn(R_ELEC[pwr[0]['county']])} on electricity access but {ordn(R_INT[pwr[0]['county']])} on internet use.")],
+        html=f"""<p>Power and internet use travel together across Kenya. The correlation between the two across all 47 counties is {corr:.2f}, which is strong. The exceptions are where the story gets useful, because each one points to a different fix.</p>
+<h2>Power ahead of internet use</h2>
+<p>These counties rank much higher on electricity than on internet use: {names([f"{L(p['county'])} ({ordn(R_ELEC[p['county']])} on power, {ordn(R_INT[p['county']])} on internet)" for p in pwr])}. Electricity is not what holds them back. Devices, data prices, skills and tower coverage are the likelier causes, and the survey data cannot tell me which.</p>
+{table(['County', 'Electricity rank', 'Internet use rank'], rows)}
+<h2>Internet use ahead of power</h2>
+<p>These counties run the other way: {names([f"{L(p['county'])} ({ordn(R_INT[p['county']])} on internet, {ordn(R_ELEC[p['county']])} on power)" for p in net])}. People there get online despite thinner grid access, probably by charging phones away from home or from solar. Better power would raise a ceiling these counties are already pushing against.</p>
+{table(['County', 'Electricity rank', 'Internet use rank'], rows2)}
+<h2>What the pattern means for planners</h2>
+<p>A single connectivity target hides two different jobs. In the first group the work is demand: affordable devices, digital skills and coverage. In the second it is supply: connections, mini grids and reliable charging. The <a href="/blog/most-and-least-connected-counties-in-kenya/">composite score</a> blends them, so I read the two ranks side by side before I draw a conclusion about any one county.</p>
+<h2>A caution on the data</h2>
+<p>Electricity access comes from the 2019 census and internet use from the 2022 survey, so the two layers are three years apart. A county that connected households after 2019 will look worse on power than it is today. Each full table is in <a href="/blog/internet-usage-in-kenya-by-county/">internet use by county</a> and <a href="/blog/electricity-access-by-county-in-kenya/">electricity access by county</a>."""))
 
     return posts

@@ -230,7 +230,7 @@ for n, po in enumerate(posts):
     faq_html = '<h2 id="faq">Frequently asked questions</h2>' + ''.join(f'<h3>{esc(q)}</h3><p>{esc(a)}</p>' for q, a in po['faq'])
     rel = [posts[(n + k) % len(posts)] for k in (1, 2, 3)]
     rel_html = '<div class="related"><h2>Keep reading</h2><ul>' + ''.join(f"<li><a href='/blog/{r['slug']}/'>{esc(r['title'])}</a></li>" for r in rel) + '</ul></div>'
-    hero = f"""<figure class="hero"><img src="{photo(po, 1200, 630)}" width="1200" height="630" alt="{esc(im['alt'])}" fetchpriority="high" decoding="async"><figcaption>Photo by <a href="https://unsplash.com/@{im['user']}{blog_posts.UTM}" rel="noopener">{esc(im['name'])}</a> on <a href="https://unsplash.com/{blog_posts.UTM}" rel="noopener">Unsplash</a></figcaption></figure>"""
+    hero = f"""<figure class="hero"><img src="{photo(po, 1200, 630)}" width="1200" height="630" alt="{esc(im['alt'])}" fetchpriority="high" decoding="async"></figure>"""
     body = f"""<p class="crumbs"><a href="/">Map</a> / <a href="/blog/">Blog</a></p>
 <h1>{esc(po['title'])}</h1>
 <p class="post-meta">By <a href="https://paulwamocha.work">Paul Wamocha</a> · {nice(po['date'])} · {mins} min read</p>
