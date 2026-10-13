@@ -64,6 +64,8 @@ footer.site{border-top:1px solid var(--border);padding:22px 16px;text-align:cent
 .pc h2{margin:0 0 4px;font-size:18px;line-height:1.3}.pc h2 a{text-decoration:none}.pc p{margin:0;font-size:15px}.pc .post-meta{margin:2px 0 8px}main.wide{max-width:1080px}.related{margin-top:34px}.related ul{margin-left:20px}
 @media(max-width:900px){.posts{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){ul.plain{columns:1}.posts{grid-template-columns:1fr}}"""
 
+GA_TAG = "<!-- Google tag (gtag.js) -->\n<script async src=\"https://www.googletagmanager.com/gtag/js?id=G-PGGQ0DJ427\"></script>\n<script>\nwindow.dataLayer = window.dataLayer || [];\nfunction gtag(){dataLayer.push(arguments);}\ngtag('js', new Date());\ngtag('config', 'G-PGGQ0DJ427');\n</script>\n"
+
 def page(path, title, desc, body, jsonld=None, og_type='website', img=None, extra_head='', wide=False):
     SUF = ' | Kenya Connectivity Map'
     t0 = title[:-len(SUF)] if title.endswith(SUF) else title
@@ -74,7 +76,7 @@ def page(path, title, desc, body, jsonld=None, og_type='website', img=None, extr
     doc = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+{GA_TAG}<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
