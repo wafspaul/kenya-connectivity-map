@@ -18,6 +18,7 @@ IMAGES = {
     'fibre': dict(id='1594915440248-1e419eba6611', name='Kirill Sh', user='kirill2020', alt='Fibre optic cables plugged into a network switch in a server rack'),
     'substation': dict(id='1509390144018-eeaf65052242', name='American Public Power Association', user='publicpowerorg', alt='Large electrical transformer in a power substation'),
     'dish': dict(id='1745697213293-21d6c972ac1a', name='Bernd Dittrich', user='hdbernd', alt='Large satellite dish against a blue sky'),
+    'rooftop_dish': dict(id='1774818803650-0e6d893f68e5', name='Alberto Lung', user='albertolung', alt='Satellite dish mounted on a tiled roof among trees'),
 }
 NUM = {1: 'One', 2: 'Two', 3: 'Three', 4: 'Four', 5: 'Five', 6: 'Six', 7: 'Seven', 8: 'Eight', 9: 'Nine', 10: 'Ten'}
 
@@ -375,5 +376,41 @@ def build(c):
 <p>A single connectivity target hides two different jobs. In the first group the work is demand: affordable devices, digital skills and coverage. In the second it is supply: connections, mini grids and reliable charging. The <a href="/blog/most-and-least-connected-counties-in-kenya/">composite score</a> blends them, so I read the two ranks side by side before I draw a conclusion about any one county.</p>
 <h2>A caution on the data</h2>
 <p>Electricity access comes from the 2019 census and internet use from the 2022 survey, so the two layers are three years apart. A county that connected households after 2019 will look worse on power than it is today. Each full table is in <a href="/blog/internet-usage-in-kenya-by-county/">internet use by county</a> and <a href="/blog/electricity-access-by-county-in-kenya/">electricity access by county</a>."""))
+
+    # ------------------------------------------------------------ 14 fixed internet and Starlink waiting list
+    wl_names = ['Nairobi', 'Kiambu', 'Mombasa', 'Machakos', "Murang'a", 'Kirinyaga', 'Kwale', 'Kilifi']
+    wl = sorted([by[n] for n in wl_names], key=lambda p: p['rank'])
+    wl_above = [p for p in wl if p['internet_ind'] >= 35]
+    wl_below = [p for p in wl if p['internet_ind'] < 35]
+    sparse2 = [p for p in P if p['towers_density'] < 2]
+    assert len(wl) == 8 and all(p['tier'] != 'Critical' for p in wl)
+    assert {p['county'] for p in wl_below} == {'Kwale', 'Kilifi'} and len(wl_above) == 6
+    assert all(p['towers_density'] >= 2 for p in wl) and len(sparse2) >= 5
+    assert all(p['elec_pct'] < 38.7 for p in wl_below)
+    fib_share = 1.57 / 2.84 * 100
+    sl_share = 27616 / 2840000 * 100
+    wl_rows = [(disp(p['county']), ordn(p['rank']), f"{p['internet_ind']:.1f}%", f"{p['elec_pct']:.1f}%", f"{p['towers_density']:,.1f}") for p in wl]
+    posts.append(dict(
+        stitle='Fixed internet growth and Starlink waiting lists by county',
+        slug='kenya-fixed-internet-growth-and-starlink-waiting-lists', date='2026-10-31', img='rooftop_dish',
+        title='Kenya added 2.84 million fixed connections, but only eight counties are named',
+        desc=f"Kenya's fixed internet hit 2.84 million connections with no county split. Starlink has a waiting list in 8 counties. Here is where they sit on my map.",
+        faq=[("How many fixed internet connections does Kenya have?", "2.84 million in the year to June 2026, up 32.4% on a year earlier, according to TechTrendsKE and Techweez reporting Communications Authority statistics. Fibre makes up 1.57 million of them."),
+             ("Which counties have a Starlink waiting list?", f"TechTrendsKE reported on 6 October 2026 that new residential orders are restricted in {names([disp(p['county']) for p in wl])}. The article blames capacity constraints."),
+             ("Are there fixed internet figures by county?", "Not in any source I could read. The national totals come with no county split, so the map still relies on survey based internet use for county comparisons.")],
+        html=f"""<p>Kenya had 2.84 million fixed internet connections in the year to June 2026, up 32.4% on a year earlier. <a href="https://techtrendske.co.ke/2026/09/19/kenya-fixed-internet-fibre-wireless-satellite-growth/" rel="noopener">TechTrendsKE</a> and <a href="https://techweez.com/2026/09/18/fixed-line-internet-connections-kenya/" rel="noopener">Techweez</a> both reported the figures in September, drawing on Communications Authority statistics. Neither gives a county split, so the headline cannot tell you where those connections are. A later report does name counties, and that is where my map can add something.</p>
+<h2>What the national numbers say</h2>
+<p>Fibre rose 29.7% to 1.57 million connections, which by my division is about {fib_share:.0f}% of the total. Satellite internet grew 54.4% to nearly 27,700, and Starlink accounts for 27,616 of those, about {sl_share:.0f}% of all fixed connections. Techweez adds that Safaricom leads fixed data with a 36.1% share. These count subscriptions, not people, and one connection can serve a whole household or office.</p>
+<h2>The eight counties with a waiting list</h2>
+<p><a href="https://techtrendske.co.ke/2026/10/06/starlink-kenya-capacity-users-growth/" rel="noopener">TechTrendsKE reported on 6 October 2026</a> that new residential Starlink orders remain restricted in eight counties, with buyers sent to a waiting list: {names([disp(p['county']) for p in wl])}. The article blames capacity constraints. It gives no start date for the restriction and no capacity figure for any county. I found no second source for the county list, so I treat it as one outlet's reporting.</p>
+<h2>Where those counties sit on the map</h2>
+<p>All eight rank within the top {wl[-1]['rank']} of 47 on my composite score, and none is in the lowest tier. {NUM[len(wl_above)]} of them have internet use above the 35% national figure. The two exceptions are {L('Kwale')} and {L('Kilifi')}, at {by['Kwale']['internet_ind']:.1f}% and {by['Kilifi']['internet_ind']:.1f}%.</p>
+{table(['County', 'Composite rank', 'Internet use', 'Electricity access', 'Towers per 100 km²'], wl_rows)}
+<p>The two Coast counties stand out. Electricity access is {by['Kwale']['elec_pct']:.1f}% in Kwale and {by['Kilifi']['elec_pct']:.1f}% in Kilifi, below the national 38.7%, yet buyers there are queuing for a satellite service. The article does not say who is ordering, so I will not guess. My <a href="/blog/kilifi-and-kwale-substations-and-electricity-access/">post on the Kilifi and Kwale substations</a> covers the power side.</p>
+<h2>Where towers are thin, the list is silent</h2>
+<p>{len(sparse2)} counties have fewer than two cell towers per 100 km², and none of them is on the waiting list. That does not show nobody there uses satellite. It shows that the only county level fact reported so far sits at the better connected end of my ranking. The sparse counties are in my post on <a href="/blog/satellite-to-phone-service-and-kenyas-sparse-counties/">satellite to phone service</a>.</p>
+<h2>What I do not know</h2>
+<p>No source I could read gives fixed internet or Starlink subscribers by county, so I cannot divide the 2.84 million by anything local. If the Authority publishes a county table I will add it to the map. Until then internet use from the 2022 survey stays my county measure, and it counts people, not subscriptions. TechTrendsKE also reports that Starlink's median download speed fell to 34.55 Mbps in March 2026 from roughly 47 Mbps a year earlier, citing Ookla data. I have not checked that figure against the Ookla source.</p>
+<p>Read the fibre side in my post on the <a href="/blog/kenya-fibre-tender-and-the-least-connected-counties/">fibre tender</a>, open {L('Nairobi')} on the <a href="/#county=nairobi">interactive map</a>, or see the <a href="/data/">data and sources</a> page."""))
 
     return posts
